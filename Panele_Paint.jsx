@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2025/12/23
+// Ver.1.0 : 2025/12/26
 
 #target illustrator
 #targetengine "main"
@@ -31,8 +31,8 @@ SELF = (function(){
 })();
 
 // 外部のJSXを読み込む
-$.evalFile(SELF.parent.path + "/ZazLib/" + "SupprtFuncLib.jsx");
-$.evalFile(SELF.parent.path + "/ZazLib/" + "PaletteWindow.jsx");
+$.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
+$.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 
 
  // ツール文字
