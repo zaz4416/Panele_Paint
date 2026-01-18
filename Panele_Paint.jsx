@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2025/12/26
+// Ver.1.0 : 2026/01/18
 
 #target illustrator
 #targetengine "main"
@@ -33,6 +33,16 @@ SELF = (function(){
 // 外部のJSXを読み込む
 $.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
 $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
+
+
+// プロパティ・メソッドをコピーする汎用関数
+function ClassInheritance(subClass, superClass) {
+    for (var prop in superClass.prototype) {
+        if (superClass.prototype.hasOwnProperty(prop)) {
+            subClass.prototype[prop] = superClass.prototype[prop];
+        }
+    }
+}
 
 
  // ツール文字
@@ -276,18 +286,18 @@ function CViewDLg( DlgName, InstanceName ) {
     
 } // コンストラクタ
 
-
-CViewDLg.prototype = CPaletteWindow.prototype; // サブクラスのメソッド追加よりも先に、継承させること
+// メソッドをコピー
+ClassInheritance(CViewDLg, CPaletteWindow);
     
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.NoSeledtedAngle = function() {
     m_RadioBtnAngle01.value = false;
     m_RadioBtnAngle02.value = false;
     m_RadioBtnAngle03.value = false;
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.SetAdobeTool = function(TlName) {
     m_ToolName = TlName;
     app.selectTool(m_ToolName);
@@ -314,8 +324,8 @@ CViewDLg.prototype.SetAdobeTool = function(TlName) {
     }
 }
 
- // 追加したいソッドをここで定義
- CViewDLg.prototype.JugeKindOfItem = function() {
+// ClassInheritanceの後ろで、追加したいメソッドを定義
+CViewDLg.prototype.JugeKindOfItem = function() {
     var doc = app.activeDocument;
     var selectionCount = doc.selection.length;
     var tFlag = true;
@@ -330,7 +340,7 @@ CViewDLg.prototype.SetAdobeTool = function(TlName) {
     return tFlag;
 }
 
-// 追加したいソッドをここで定義 
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.ObjectSelect_Func = function()
 {
     try
@@ -348,7 +358,7 @@ CViewDLg.prototype.ObjectSelect_Func = function()
     } // finally
 }
       
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.EyedropperTool_Func = function()
 {
     try
@@ -365,7 +375,7 @@ CViewDLg.prototype.EyedropperTool_Func = function()
     } // finally
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.BlobBrush_Func = function()
 {
     try
@@ -392,7 +402,7 @@ CViewDLg.prototype.BlobBrush_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.Eraser_Func = function()
 {
     try
@@ -419,7 +429,7 @@ CViewDLg.prototype.Eraser_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.InitRotate_Func = function()
 {
     try
@@ -438,7 +448,7 @@ CViewDLg.prototype.InitRotate_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.RotateRight_Func = function()
 {
     try
@@ -463,7 +473,7 @@ CViewDLg.prototype.RotateRight_Func = function()
   
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.RotateLeft_Func = function()
 {
     try
@@ -488,7 +498,7 @@ CViewDLg.prototype.RotateLeft_Func = function()
   
  }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.LeftTurn_Func = function()
 {
     try
@@ -513,7 +523,7 @@ CViewDLg.prototype.LeftTurn_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.RightTurn_Func = function()
 {
     try
@@ -538,7 +548,7 @@ CViewDLg.prototype.RightTurn_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.UptoTurn_Func = function()
 {
     try
@@ -556,7 +566,7 @@ CViewDLg.prototype.UptoTurn_Func = function()
  
 }
 
-// 追加したいソッドをここで定義
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CViewDLg.prototype.NoCompoundFunc = function()
 {
     try
