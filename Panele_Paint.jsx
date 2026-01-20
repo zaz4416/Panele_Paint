@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/01/18
+// Ver.1.0 : 2026/01/21
 
 #target illustrator
 #targetengine "main"
@@ -35,16 +35,6 @@ $.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
 $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 
 
-// プロパティ・メソッドをコピーする汎用関数
-function ClassInheritance(subClass, superClass) {
-    for (var prop in superClass.prototype) {
-        if (superClass.prototype.hasOwnProperty(prop)) {
-            subClass.prototype[prop] = superClass.prototype[prop];
-        }
-    }
-}
-
-
  // ツール文字
  var cAdobeDirectObjectSelectTool = 'Adobe Direct Object Select Tool';      // グループ選択
  var cAdobeEyedropperTool         = 'Adobe Eyedropper Tool';                // スポイト
@@ -57,13 +47,15 @@ function ClassInheritance(subClass, superClass) {
 //-----------------------------------
  
 // コンストラクタ    
-function CViewDLg( DlgName, InstanceName ) {
+function CViewDLg( DlgName ) {
        
     // 初期化
     var m_TheObject = this;
     CPaletteWindow.call( m_TheObject );         // コンストラクタ
     m_TheObject.InitDialog( DlgName );          // イニシャライザ
-    m_TheObject.InitInstance( InstanceName );   // インスタンス初期化
+
+    CViewDLg.TheObj = this;                     // クラスインスタンスを指す this を退避( 静的プロパティ )
+
     var xDlg = m_TheObject.GetDlg();            // ダイアログへのオブジェクトを得る
 
     var m_RadioBtnAngle01;
@@ -337,8 +329,7 @@ CViewDLg.prototype.JugeKindOfItem = function() {
     return tFlag;
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.ObjectSelect_Func = function()
+CViewDLg.ObjectSelect_Func = function()
 {
     try
     {
@@ -354,9 +345,8 @@ CViewDLg.prototype.ObjectSelect_Func = function()
        //app.redraw();                                  // 再描画させる
     } // finally
 }
-      
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.EyedropperTool_Func = function()
+
+CViewDLg.EyedropperTool_Func = function()
 {
     try
     {
@@ -372,8 +362,8 @@ CViewDLg.prototype.EyedropperTool_Func = function()
     } // finally
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.BlobBrush_Func = function()
+
+CViewDLg.BlobBrush_Func = function()
 {
     try
     {
@@ -399,8 +389,7 @@ CViewDLg.prototype.BlobBrush_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.Eraser_Func = function()
+CViewDLg.Eraser_Func = function()
 {
     try
     {
@@ -427,12 +416,12 @@ CViewDLg.prototype.Eraser_Func = function()
 }
 
 // ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.InitRotate_Func = function()
+CViewDLg.InitRotate_Func = function()
 {
     try
     {
         app.activeDocument.activeView.rotateAngle = 0;
-        this.NoSeledtedAngle();
+        CViewDLg.TheObj.NoSeledtedAngle();
     } // try
     catch(e)
     {
@@ -445,8 +434,7 @@ CViewDLg.prototype.InitRotate_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.RotateRight_Func = function()
+CViewDLg.RotateRight_Func = function()
 {
     try
     {
@@ -470,8 +458,7 @@ CViewDLg.prototype.RotateRight_Func = function()
   
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.RotateLeft_Func = function()
+CViewDLg.RotateLeft_Func = function()
 {
     try
     { 
@@ -495,8 +482,8 @@ CViewDLg.prototype.RotateLeft_Func = function()
   
  }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.LeftTurn_Func = function()
+
+CViewDLg.LeftTurn_Func = function()
 {
     try
     {
@@ -521,7 +508,7 @@ CViewDLg.prototype.LeftTurn_Func = function()
 }
 
 // ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.RightTurn_Func = function()
+CViewDLg.RightTurn_Func = function()
 {
     try
     {
@@ -545,8 +532,8 @@ CViewDLg.prototype.RightTurn_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.UptoTurn_Func = function()
+
+CViewDLg.UptoTurn_Func = function()
 {
     try
     {
@@ -563,8 +550,7 @@ CViewDLg.prototype.UptoTurn_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.NoCompoundFunc = function()
+CViewDLg.NoCompoundFunc = function()
 {
     try
     {
@@ -602,7 +588,7 @@ function escExit(event) {
     }
  }
  
-var DlgPaint = new CViewDLg( "塗りサポーター", "DlgPaint" );  //インスタンスを生成
+var DlgPaint = new CViewDLg( "塗りサポーター" );  //インスタンスを生成
     DlgPaint.addEventListener( 'keydown',  escExit );
 
 main();
