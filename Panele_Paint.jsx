@@ -369,16 +369,18 @@ CViewDLg.BlobBrush_Func = function()
 {
     try
     {
+        var Dlg = CViewDLg.TheObj;
+
         // アイテムが選択されている条件で、app.selectTool('Adobe Blob Brush Tool')を実施するか判定
         if ( m_GrCheckbox.value ) {
-            if ( this.JugeKindOfItem() ) {
-                this.SetAdobeTool(m_ToolName);
+            if ( Dlg.JugeKindOfItem() ) {
+                Dlg.SetAdobeTool(m_ToolName);
                 throw new Error("先に、パスを選択してください");
             }
         }
 
         m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
-        this.SetAdobeTool(cAdobeBlobBrushTool);   // 塗りブラシ 
+        Dlg.SetAdobeTool(cAdobeBlobBrushTool);   // 塗りブラシ 
    } // try
    catch(e)
    {
@@ -395,17 +397,19 @@ CViewDLg.BlobBrush_Func = function()
 CViewDLg.Eraser_Func = function()
 {
     try
-    {
+    {        
+        var Dlg = CViewDLg.TheObj;
+
         // アイテムが選択されている条件で、app.selectTool('Adobe Eraser Tool')を実施するか判定
         if ( m_GrCheckbox.value ) {
-            if ( this.JugeKindOfItem() ) {
-                this.SetAdobeTool(m_ToolName);
+            if ( Dlg.JugeKindOfItem() ) {
+                Dlg.SetAdobeTool(m_ToolName);
                 throw new Error("先に、パスを選択してください");
             }
         }
 
         m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
-        this.SetAdobeTool(cdAobeEraserTool);      // 消しゴム 
+        Dlg.SetAdobeTool(cdAobeEraserTool);      // 消しゴム 
     } // try
     catch(e)
     {
