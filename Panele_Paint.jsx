@@ -50,13 +50,13 @@ $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 function CViewDLg( DlgName ) {
        
     // 初期化
-    var m_TheObject = this;
-    CPaletteWindow.call( m_TheObject );         // コンストラクタ
-    m_TheObject.InitDialog( DlgName );          // イニシャライザ
+    CPaletteWindow.call( this );         // コンストラクタ
+    this.InitDialog( DlgName );          // イニシャライザ
 
     CViewDLg.TheObj = this;                     // クラスインスタンスを指す this を退避( 静的プロパティ )
 
-    var xDlg = m_TheObject.GetDlg();            // ダイアログへのオブジェクトを得る
+    var m_TheObject = CViewDLg.TheObj ;
+    var xDlg = this.GetDlg();            // ダイアログへのオブジェクトを得る
 
     var m_RadioBtnAngle01;
     var m_RadioBtnAngle02;
@@ -329,6 +329,7 @@ CViewDLg.prototype.JugeKindOfItem = function() {
     return tFlag;
 }
 
+// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.ObjectSelect_Func = function()
 {
     try
@@ -346,6 +347,7 @@ CViewDLg.ObjectSelect_Func = function()
     } // finally
 }
 
+// CViewDLgの静的メソッドを定義
 CViewDLg.EyedropperTool_Func = function()
 {
     try
@@ -362,7 +364,7 @@ CViewDLg.EyedropperTool_Func = function()
     } // finally
 }
 
-
+// CViewDLgの静的メソッドを定義
 CViewDLg.BlobBrush_Func = function()
 {
     try
@@ -389,6 +391,7 @@ CViewDLg.BlobBrush_Func = function()
  
 }
 
+// CViewDLgの静的メソッドを定義
 CViewDLg.Eraser_Func = function()
 {
     try
@@ -415,7 +418,7 @@ CViewDLg.Eraser_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
+// CViewDLgの静的メソッドを定義
 CViewDLg.InitRotate_Func = function()
 {
     try
@@ -434,6 +437,7 @@ CViewDLg.InitRotate_Func = function()
  
 }
 
+// CViewDLgの静的メソッドを定義
 CViewDLg.RotateRight_Func = function()
 {
     try
@@ -458,6 +462,7 @@ CViewDLg.RotateRight_Func = function()
   
 }
 
+// CViewDLgの静的メソッドを定義
 CViewDLg.RotateLeft_Func = function()
 {
     try
@@ -482,7 +487,7 @@ CViewDLg.RotateLeft_Func = function()
   
  }
 
-
+// CViewDLgの静的メソッドを定義
 CViewDLg.LeftTurn_Func = function()
 {
     try
@@ -507,7 +512,7 @@ CViewDLg.LeftTurn_Func = function()
  
 }
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
+// CViewDLgの静的メソッドを定義
 CViewDLg.RightTurn_Func = function()
 {
     try
@@ -532,7 +537,7 @@ CViewDLg.RightTurn_Func = function()
  
 }
 
-
+// CViewDLgの静的メソッドを定義
 CViewDLg.UptoTurn_Func = function()
 {
     try
@@ -550,6 +555,7 @@ CViewDLg.UptoTurn_Func = function()
  
 }
 
+// CViewDLgの静的メソッドを定義
 CViewDLg.NoCompoundFunc = function()
 {
     try
