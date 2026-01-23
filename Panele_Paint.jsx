@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/01/21
+// Ver.1.0 : 2026/01/23
 
 #target illustrator
 #targetengine "main"
@@ -46,14 +46,17 @@ $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 // クラス CViewDLg
 //-----------------------------------
  
-// コンストラクタ    
+//~~~~~~~~~~~~~~~~~~~~
+// 1. コンストラクタ定義
+//~~~~~~~~~~~~~~~~~~~~
 function CViewDLg( DlgName ) {
        
     // 初期化
     CPaletteWindow.call( this );         // コンストラクタ
     this.InitDialog( DlgName );          // イニシャライザ
 
-    CViewDLg.TheObj = this;                     // クラスインスタンスを指す this を退避( 静的プロパティ )
+    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
+    this.constructor.TheObj = this;
 
     var m_TheObject = CViewDLg.TheObj ;
     var xDlg = this.GetDlg();            // ダイアログへのオブジェクトを得る
@@ -272,64 +275,16 @@ function CViewDLg( DlgName ) {
     }
 
     m_TheObject.SetAdobeTool(m_ToolName);   // 起動時のツールを指定する
-    
-} // コンストラクタ
+}
 
-// メソッドをコピー
+//~~~~~~~~~~~~~~
+// 2. クラス継承
+//~~~~~~~~~~~~~~
 ClassInheritance(CViewDLg, CPaletteWindow);
-    
 
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.NoSeledtedAngle = function() {
-    this.m_RadioBtnAngle01.value = false;
-    this.m_RadioBtnAngle02.value = false;
-    this.m_RadioBtnAngle03.value = false;
-}
-
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.SetAdobeTool = function(TlName) {
-    m_ToolName = TlName;
-    app.selectTool(m_ToolName);
-        
-    m_RadioBtnObjectSelect.value = false;
-    m_objRb01.value = false;
-    m_RadioBtnBlobBrush.value = false;
-    m_RadioBtnEraser.value = false;
-
-     if ( m_ToolName == cAdobeDirectObjectSelectTool ) {  // グループ選択
-        m_RadioBtnObjectSelect.value = true;
-    }
-
-    if ( m_ToolName == cAdobeEyedropperTool ) {         // スポイト
-        m_objRb01.value = true;
-    }
-
-    if ( m_ToolName == cAdobeBlobBrushTool ) {          // 塗りブラシ
-        m_RadioBtnBlobBrush.value = true;
-    }
-
-    if ( m_ToolName == cdAobeEraserTool ) {            // 消しゴム
-        m_RadioBtnEraser.value = true;
-    }
-}
-
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CViewDLg.prototype.JugeKindOfItem = function() {
-    var doc = app.activeDocument;
-    var selectionCount = doc.selection.length;
-    var tFlag = true;
-
-    if ( selectionCount >=1 ) {
-        var SelectedItemX = doc.selection[0];
-        if ( KindOfItem(SelectedItemX, cKindOfPathItem) || KindOfItem(SelectedItemX, cCompoundPathItem) || KindOfItem(SelectedItemX, cKindOfGroupItem) ) {
-            tFlag = false;
-        }
-    }
-
-    return tFlag;
-}
-
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
+//~~~~~~~~~~~~~~~~~~~~~
+// 3. 静的メソッドの定義
+//~~~~~~~~~~~~~~~~~~~~~
 CViewDLg.ObjectSelect_Func = function()
 {
     try
@@ -349,7 +304,6 @@ CViewDLg.ObjectSelect_Func = function()
     } // finally
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.EyedropperTool_Func = function()
 {
     try
@@ -368,7 +322,6 @@ CViewDLg.EyedropperTool_Func = function()
     } // finally
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.BlobBrush_Func = function()
 {
     try
@@ -397,7 +350,6 @@ CViewDLg.BlobBrush_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.Eraser_Func = function()
 {
     try
@@ -426,7 +378,6 @@ CViewDLg.Eraser_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.InitRotate_Func = function()
 {
     try
@@ -447,7 +398,6 @@ CViewDLg.InitRotate_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.RotateRight_Func = function()
 {
     try
@@ -472,7 +422,6 @@ CViewDLg.RotateRight_Func = function()
   
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.RotateLeft_Func = function()
 {
     try
@@ -497,7 +446,6 @@ CViewDLg.RotateLeft_Func = function()
   
  }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.LeftTurn_Func = function()
 {
     try
@@ -522,7 +470,6 @@ CViewDLg.LeftTurn_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.RightTurn_Func = function()
 {
     try
@@ -547,7 +494,6 @@ CViewDLg.RightTurn_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.UptoTurn_Func = function()
 {
     try
@@ -565,7 +511,6 @@ CViewDLg.UptoTurn_Func = function()
  
 }
 
-// CViewDLgの静的メソッドを定義　(prototypeを記述しない場合は、静的メソッドになる)
 CViewDLg.NoCompoundFunc = function()
 {
     try
@@ -595,6 +540,58 @@ CViewDLg.NoCompoundFunc = function()
     } // finally
  
 }
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 4. プロトタイプメソッドの定義
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CViewDLg.prototype.NoSeledtedAngle = function() {
+    this.m_RadioBtnAngle01.value = false;
+    this.m_RadioBtnAngle02.value = false;
+    this.m_RadioBtnAngle03.value = false;
+}
+
+CViewDLg.prototype.SetAdobeTool = function(TlName) {
+    m_ToolName = TlName;
+    app.selectTool(m_ToolName);
+        
+    m_RadioBtnObjectSelect.value = false;
+    m_objRb01.value = false;
+    m_RadioBtnBlobBrush.value = false;
+    m_RadioBtnEraser.value = false;
+
+     if ( m_ToolName == cAdobeDirectObjectSelectTool ) {  // グループ選択
+        m_RadioBtnObjectSelect.value = true;
+    }
+
+    if ( m_ToolName == cAdobeEyedropperTool ) {         // スポイト
+        m_objRb01.value = true;
+    }
+
+    if ( m_ToolName == cAdobeBlobBrushTool ) {          // 塗りブラシ
+        m_RadioBtnBlobBrush.value = true;
+    }
+
+    if ( m_ToolName == cdAobeEraserTool ) {            // 消しゴム
+        m_RadioBtnEraser.value = true;
+    }
+}
+
+CViewDLg.prototype.JugeKindOfItem = function() {
+    var doc = app.activeDocument;
+    var selectionCount = doc.selection.length;
+    var tFlag = true;
+
+    if ( selectionCount >=1 ) {
+        var SelectedItemX = doc.selection[0];
+        if ( KindOfItem(SelectedItemX, cKindOfPathItem) || KindOfItem(SelectedItemX, cCompoundPathItem) || KindOfItem(SelectedItemX, cKindOfGroupItem) ) {
+            tFlag = false;
+        }
+    }
+
+    return tFlag;
+}
+
+
 
 
 function escExit(event) {
