@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/01/23
+// Ver.1.0 : 2026/01/24
 
 #target illustrator
 #targetengine "main"
@@ -70,51 +70,23 @@ function CSurface( DlgName ) {
     var objPannel02Group = objPannel01.add("group");
     objPannel02Group.orientation = "row"; // 1行目の中身は横に並べる
 
-        // ダイアログにボタン追加
-    m_BtnResizeDown = objPannel01Group.add("button");
+    // ダイアログにボタン追加
+    var m_BtnResizeDown = objPannel01Group.add("button");
     m_BtnResizeDown.text = "↻";
     m_BtnResizeDown.preferredSize = [30, 30];
-
-    m_BtnResizeDown.onClick = function() {
-        try
-        {
-            self.CallFunc( "RotateRight_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    m_BtnResizeDown.onClick = function() { self.onRotateRightClick(); }
 
     // ダイアログにボタン追加
-    m_BtnInitRotate = objPannel01Group.add("button");
+    var m_BtnInitRotate = objPannel01Group.add("button");
     m_BtnInitRotate.text = "★";
     m_BtnInitRotate.preferredSize = [20, 20];
-    m_BtnInitRotate.onClick = function() {
-        try
-        {
-            self.CallFunc( "InitRotate_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    m_BtnInitRotate.onClick = function() { self.onInitRotateClick(); }
 
     // ダイアログにボタン追加
-    m_BtnResizeUp = objPannel01Group.add("button");
+    var m_BtnResizeUp = objPannel01Group.add("button");
     m_BtnResizeUp.text= "↺";
     m_BtnResizeUp.preferredSize = [30, 30];
-    m_BtnResizeUp.onClick = function() {
-        try
-        {
-            self.CallFunc( "RotateLeft_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    m_BtnResizeUp.onClick = function() { self.onRotateLeftClick(); }
 
     self.m_RadioBtnAngle02 = objPannel02Group.add("radiobutton");
     self.m_RadioBtnAngle02.text = "↻ 90度"
@@ -260,6 +232,8 @@ function CSurface( DlgName ) {
 
 }
 ClassInheritance(CSurface, CPaletteWindow); // クラス継承
+
+
 
 
 //-----------------------------------
@@ -549,6 +523,40 @@ CViewDLg.NoCompoundFunc = function()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 4. プロトタイプメソッドの定義
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CViewDLg.prototype.onRotateRightClick = function() {
+    try
+    {
+        this.CallFunc( "RotateRight_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    } 
+}
+
+CViewDLg.prototype.onInitRotateClick = function() {
+    try
+    {
+        this.CallFunc( "InitRotate_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    } 
+}
+
+CViewDLg.prototype.onRotateLeftClick = function() {
+    try
+    {
+        this.CallFunc( "RotateLeft_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    } 
+}
+
 CViewDLg.prototype.NoSeledtedAngle = function() {
     this.m_RadioBtnAngle01.value = false;
     this.m_RadioBtnAngle02.value = false;
