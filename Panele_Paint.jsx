@@ -58,8 +58,8 @@ function CViewDLg( DlgName ) {
     // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
     this.constructor.TheObj = this;
 
-    var m_TheObject = CViewDLg.TheObj ;
-    var xDlg = this.GetDlg();            // ダイアログへのオブジェクトを得る
+    // クラスへのポインタを確保
+    var self = this;
 
     var m_RadioBtnAngle01;
     var m_RadioBtnAngle02;
@@ -71,7 +71,7 @@ function CViewDLg( DlgName ) {
 
     var m_ToolName = cAdobeDirectObjectSelectTool;   // グループ選択
 
-    var objPannel01 = xDlg.add("panel");
+    var objPannel01 = this.m_Dialog.add("panel");
     objPannel01.text = "ビュー回転";
     //objPannel01.orientation = "row";    // パネル内の要素を横に並べる
     //objPannel01.alignChildren = ["center", "top"];
@@ -94,7 +94,7 @@ function CViewDLg( DlgName ) {
     m_BtnResizeDown.onClick = function() {
         try
         {
-                m_TheObject.CallFunc( "RotateRight_Func" );
+            self.CallFunc( "RotateRight_Func" );
         }
         catch(e)
         {
@@ -109,7 +109,7 @@ function CViewDLg( DlgName ) {
     m_BtnInitRotate.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "InitRotate_Func" );
+            self.CallFunc( "InitRotate_Func" );
         }
         catch(e)
         {
@@ -124,7 +124,7 @@ function CViewDLg( DlgName ) {
     m_BtnResizeUp.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "RotateLeft_Func" );
+            self.CallFunc( "RotateLeft_Func" );
         }
         catch(e)
         {
@@ -132,12 +132,12 @@ function CViewDLg( DlgName ) {
         } 
     }
 
-    m_TheObject.m_RadioBtnAngle02 = objPannel02Group.add("radiobutton");
-    m_TheObject.m_RadioBtnAngle02.text = "↻ 90度"
-    m_TheObject.m_RadioBtnAngle02.onClick = function() {
+    self.m_RadioBtnAngle02 = objPannel02Group.add("radiobutton");
+    self.m_RadioBtnAngle02.text = "↻ 90度"
+    self.m_RadioBtnAngle02.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "RightTurn_Func" );
+            self.CallFunc( "RightTurn_Func" );
         }
         catch(e)
         {
@@ -145,12 +145,12 @@ function CViewDLg( DlgName ) {
         }
     }
 
-    m_TheObject.m_RadioBtnAngle01 = objPannel02Group.add("radiobutton");
-    m_TheObject.m_RadioBtnAngle01.text = "↺ 90度"
-    m_TheObject.m_RadioBtnAngle01.onClick = function() {
+    self.m_RadioBtnAngle01 = objPannel02Group.add("radiobutton");
+    self.m_RadioBtnAngle01.text = "↺ 90度"
+    self.m_RadioBtnAngle01.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "LeftTurn_Func" );
+            self.CallFunc( "LeftTurn_Func" );
         }
         catch(e)
         {
@@ -158,12 +158,12 @@ function CViewDLg( DlgName ) {
         }
     }
 
-    m_TheObject.m_RadioBtnAngle03 = objPannel02Group.add("radiobutton");
-    m_TheObject.m_RadioBtnAngle03.text = "180度"
-    m_TheObject.m_RadioBtnAngle03.onClick = function() {
+    self.m_RadioBtnAngle03 = objPannel02Group.add("radiobutton");
+    self.m_RadioBtnAngle03.text = "180度"
+    self.m_RadioBtnAngle03.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "UptoTurn_Func" );
+            self.CallFunc( "UptoTurn_Func" );
         }
         catch(e)
         {
@@ -172,7 +172,7 @@ function CViewDLg( DlgName ) {
     }
 
     // ダイアログにボタン追加
-    m_BtnSimplify = m_TheObject.AddButton("( Undo )");
+    m_BtnSimplify = self.AddButton("( Undo )");
     m_BtnSimplify.onClick = function() {
         try
         {
@@ -185,7 +185,7 @@ function CViewDLg( DlgName ) {
     }
 
     // ダイアログにボタン追加
-    m_BtnSimplify = m_TheObject.AddButton("( パス単純化 )");
+    m_BtnSimplify = self.AddButton("( パス単純化 )");
     m_BtnSimplify.onClick = function() {
         try
         {
@@ -197,7 +197,7 @@ function CViewDLg( DlgName ) {
         } 
     }
 
-    var objPannel02 = xDlg.add("panel");
+    var objPannel02 = this.m_Dialog.add("panel");
     objPannel02.text = "ツール";
 
     m_GrCheckbox = objPannel02.add("checkbox");
@@ -209,7 +209,7 @@ function CViewDLg( DlgName ) {
     m_RadioBtnBlobBrush.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "BlobBrush_Func" );
+            self.CallFunc( "BlobBrush_Func" );
         }
         catch(e)
         {
@@ -220,23 +220,23 @@ function CViewDLg( DlgName ) {
     m_RadioBtnEraser = objPannel02.add("radiobutton");
     m_RadioBtnEraser.text = "消しゴム";
     m_RadioBtnEraser.onClick = function() {
-        m_TheObject.CallFunc( "Eraser_Func" );
+        self.CallFunc( "Eraser_Func" );
     }
 
     m_RadioBtnObjectSelect = objPannel02.add("radiobutton");
     m_RadioBtnObjectSelect.text = "グループ選択";
     m_RadioBtnObjectSelect.onClick = function() {
-        m_TheObject.CallFunc( "ObjectSelect_Func" ); 
+        self.CallFunc( "ObjectSelect_Func" ); 
     }
 
     m_objRb01 = objPannel02.add("radiobutton");
     m_objRb01.text = "スポイト";
     m_objRb01.onClick = function() {
-        m_TheObject.CallFunc( "EyedropperTool_Func" );      
+        self.CallFunc( "EyedropperTool_Func" );      
     }
 
     // ダイアログにボタン追加
-    m_BtnFitIn = m_TheObject.AddButton("( 全体を表示 )");
+    m_BtnFitIn = self.AddButton("( 全体を表示 )");
     m_BtnFitIn.onClick = function() {
         try
         {
@@ -249,11 +249,11 @@ function CViewDLg( DlgName ) {
     }    
 
     // ダイアログにボタン追加
-    m_BtnSimplify = m_TheObject.AddButton("( 選択されたアイテムを塗りつぶし )");
+    m_BtnSimplify = self.AddButton("( 選択されたアイテムを塗りつぶし )");
     m_BtnSimplify.onClick = function() {
         try
         {
-            m_TheObject.CallFunc( "NoCompoundFunc" );
+            self.CallFunc( "NoCompoundFunc" );
         }
         catch(e)
         {
@@ -262,11 +262,11 @@ function CViewDLg( DlgName ) {
     }
 
     // ダイアログにボタン追加
-    m_BtnCancel = m_TheObject.AddButton( "閉じる" );
+    m_BtnCancel = self.AddButton( "閉じる" );
     m_BtnCancel.onClick = function () {
         try
         {      
-            m_TheObject.CloseDlg();
+            self.CloseDlg();
         }
         catch(e)
         {
@@ -274,7 +274,7 @@ function CViewDLg( DlgName ) {
         }
     }
 
-    m_TheObject.SetAdobeTool(m_ToolName);   // 起動時のツールを指定する
+    self.SetAdobeTool(m_ToolName);   // 起動時のツールを指定する
 }
 
 //~~~~~~~~~~~~~~
