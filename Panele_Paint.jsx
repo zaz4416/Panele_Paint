@@ -90,68 +90,23 @@ function CSurface( DlgName ) {
 
     self.m_RadioBtnAngle02 = objPannel02Group.add("radiobutton");
     self.m_RadioBtnAngle02.text = "↻ 90度"
-    self.m_RadioBtnAngle02.onClick = function() {
-        try
-        {
-            self.CallFunc( "RightTurn_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        }
-    }
+    self.m_RadioBtnAngle02.onClick = function() { self.onRightTurnClick(); }
 
     self.m_RadioBtnAngle01 = objPannel02Group.add("radiobutton");
     self.m_RadioBtnAngle01.text = "↺ 90度"
-    self.m_RadioBtnAngle01.onClick = function() {
-        try
-        {
-            self.CallFunc( "LeftTurn_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        }
-    }
+    self.m_RadioBtnAngle01.onClick = function() { self.onLeftTurnClick(); }
 
     self.m_RadioBtnAngle03 = objPannel02Group.add("radiobutton");
     self.m_RadioBtnAngle03.text = "180度"
-    self.m_RadioBtnAngle03.onClick = function() {
-        try
-        {
-            self.CallFunc( "UptoTurn_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        }
-    }
-
-       // ダイアログにボタン追加
-    m_BtnSimplify = self.AddButton("( Undo )");
-    m_BtnSimplify.onClick = function() {
-        try
-        {
-            app.executeMenuCommand("undo");;
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    self.m_RadioBtnAngle03.onClick = function() { self.onUptoTurnClick(); }
 
     // ダイアログにボタン追加
-    m_BtnSimplify = self.AddButton("( パス単純化 )");
-    m_BtnSimplify.onClick = function() {
-        try
-        {
-            app.executeMenuCommand("simplify menu item");
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    var m_BtnSimplify = self.AddButton("( Undo )");
+    m_BtnSimplify.onClick = function() { self.onUndoClick(); }
+
+    // ダイアログにボタン追加
+    var m_BtnSimplify = self.AddButton("( パス単純化 )");
+    m_BtnSimplify.onClick = function() { self.onToSimlePathClick(); }
 
     var objPannel02 = this.m_Dialog.add("panel");
     objPannel02.text = "ツール";
@@ -160,76 +115,33 @@ function CSurface( DlgName ) {
     m_GrCheckbox.text = "パス・チェック"
     m_GrCheckbox.value = true;              // アイテムが選択されているか監視する
 
-    m_RadioBtnBlobBrush = objPannel02.add("radiobutton");
+    var m_RadioBtnBlobBrush = objPannel02.add("radiobutton");
     m_RadioBtnBlobBrush.text = "塗りブラシ";
-    m_RadioBtnBlobBrush.onClick = function() {
-        try
-        {
-            self.CallFunc( "BlobBrush_Func" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        }
-    }
+    m_RadioBtnBlobBrush.onClick = function() { self.onBlobBrushClick(); }
 
-    m_RadioBtnEraser = objPannel02.add("radiobutton");
+    var m_RadioBtnEraser = objPannel02.add("radiobutton");
     m_RadioBtnEraser.text = "消しゴム";
-    m_RadioBtnEraser.onClick = function() {
-        self.CallFunc( "Eraser_Func" );
-    }
+    m_RadioBtnEraser.onClick = function() { self.onEraserClick(); }
 
-    m_RadioBtnObjectSelect = objPannel02.add("radiobutton");
+    var m_RadioBtnObjectSelect = objPannel02.add("radiobutton");
     m_RadioBtnObjectSelect.text = "グループ選択";
-    m_RadioBtnObjectSelect.onClick = function() {
-        self.CallFunc( "ObjectSelect_Func" ); 
-    }
+    m_RadioBtnObjectSelect.onClick = function() { self.onObjectSelectClick(); }
 
-    m_objRb01 = objPannel02.add("radiobutton");
+    var m_objRb01 = objPannel02.add("radiobutton");
     m_objRb01.text = "スポイト";
-    m_objRb01.onClick = function() {
-        self.CallFunc( "EyedropperTool_Func" );      
-    }
+    m_objRb01.onClick = function() { self.onEyedropperToolClick(); }
 
     // ダイアログにボタン追加
-    m_BtnFitIn = self.AddButton("( 全体を表示 )");
-    m_BtnFitIn.onClick = function() {
-        try
-        {
-            app.executeMenuCommand('fitin');
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }    
-
+    var m_BtnFitIn = self.AddButton("( 全体を表示 )");
+    m_BtnFitIn.onClick = function() { self.onFitinClick() }
+ 
     // ダイアログにボタン追加
-    m_BtnSimplify = self.AddButton("( 選択されたアイテムを塗りつぶし )");
-    m_BtnSimplify.onClick = function() {
-        try
-        {
-            self.CallFunc( "NoCompoundFunc" );
-        }
-        catch(e)
-        {
-            alert( e.message );
-        } 
-    }
+    var m_BtnSimplify = self.AddButton("( 選択されたアイテムを塗りつぶし )");
+    m_BtnSimplify.onClick = function() { self.onNoCompoundClick(); }
 
     // ダイアログにボタン追加
     m_BtnCancel = self.AddButton( "閉じる" );
-    m_BtnCancel.onClick = function () {
-        try
-        {      
-            self.CloseDlg();
-        }
-        catch(e)
-        {
-            alert( e.message );
-        }
-    }
-
+    m_BtnCancel.onClick = function () { self.onCloseDlgClick(); }
 }
 ClassInheritance(CSurface, CPaletteWindow); // クラス継承
 
@@ -554,7 +466,139 @@ CViewDLg.prototype.onRotateLeftClick = function() {
     catch(e)
     {
         alert( e.message );
-    } 
+    }
+}
+
+CViewDLg.prototype.onRightTurnClick = function() {
+    try
+    {
+        this.CallFunc( "RightTurn_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onLeftTurnClick = function() {
+    try
+    {
+        this.CallFunc( "LeftTurn_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onUptoTurnClick = function() {
+    try
+    {
+        this.CallFunc( "UptoTurn_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onUndoClick = function() {
+    try
+    {
+        app.executeMenuCommand("undo");
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onToSimlePathClick = function() {
+    try
+    {
+        app.executeMenuCommand("simplify menu item");
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onBlobBrushClick = function() {
+    try
+    {
+        this.CallFunc( "BlobBrush_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onEraserClick = function() {
+    try
+    {
+        this.CallFunc( "Eraser_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onObjectSelectClick = function() {
+    try
+    {
+        this.CallFunc( "ObjectSelect_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onEyedropperToolClick = function() {
+    try
+    {
+        this.CallFunc( "EyedropperTool_Func" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onFitinClick = function() {
+    try
+    {
+        app.executeMenuCommand('fitin');
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onNoCompoundClick = function() {
+    try
+    {
+        this.CallFunc( "NoCompoundFunc" );
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.onCloseDlgClick = function() {
+    try
+    {
+        this.CloseDlg();
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
 }
 
 CViewDLg.prototype.NoSeledtedAngle = function() {
