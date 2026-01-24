@@ -4,8 +4,9 @@
 </javascriptresource>
 */
 
-// https://ten-artai.com/2015/12/320/#google_vignette. //正統派のエフェクトを扱う例
+// https://ten-artai.com/2015/12/320/#google_vignette.  //正統派のエフェクトを扱う例
 // https://webtan.impress.co.jp/e/2016/06/07/23018　　　 // 外字
+// https://scriptui.joonas.me/                          // ScriptUI Dialog Builder.
 
 
 // 今見えているウィンドウの大きさ
