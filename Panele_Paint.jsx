@@ -19,12 +19,11 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/01/24
+// Ver.1.0 : 2026/01/25
 
 #target illustrator
 #targetengine "main"
 
-$.localize = true;
 
 SELF = (function(){
     try {app.documents.test()}
@@ -32,8 +31,8 @@ SELF = (function(){
 })();
 
 // 外部のJSXを読み込む
-$.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
 $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
+$.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
 
 
 // 言語ごとの辞書を定義
@@ -52,11 +51,17 @@ var LangStrings = {
  var cdAobeEraserTool             = 'Adobe Eraser Tool';                    // 消しゴム
 
 
- //-----------------------------------
-// クラス CSurface
+
 //-----------------------------------
-function CSurface( DlgName ) {
-    CPaletteWindow.call( this,false );       // コンストラクタ
+// クラス CViewDLg
+//-----------------------------------
+ 
+//~~~~~~~~~~~~~~~~~~~~
+// 1. コンストラクタ定義
+//~~~~~~~~~~~~~~~~~~~~
+function CViewDLg() {
+
+    CPaletteWindow.call( this, false /* ダイアログのリサイズ禁止 */ );     // コンストラクタ
 
     // クラスへのポインタを確保
     var self = this;
@@ -90,26 +95,8 @@ function CSurface( DlgName ) {
     }
     else{
         alert("GUIが未定です");
+        return;
     }
-}
-ClassInheritance(CSurface, CPaletteWindow); // クラス継承
-
-
-
-
-//-----------------------------------
-// クラス CViewDLg
-//-----------------------------------
- 
-//~~~~~~~~~~~~~~~~~~~~
-// 1. コンストラクタ定義
-//~~~~~~~~~~~~~~~~~~~~
-function CViewDLg( DlgName ) {
-
-    CSurface.call( this, DlgName );     // コンストラクタ
-
-    // クラスへのポインタを確保
-    var self = this;
 
     var StartToolName = cAdobeDirectObjectSelectTool;   // グループ選択
     self.SetAdobeTool(StartToolName);   // 起動時のツールを指定する
@@ -118,7 +105,7 @@ function CViewDLg( DlgName ) {
 //~~~~~~~~~~~~~~
 // 2. クラス継承
 //~~~~~~~~~~~~~~
-ClassInheritance(CViewDLg, CSurface);
+ClassInheritance(CViewDLg, CPaletteWindow);
 
 //~~~~~~~~~~~~~~~~~~~~~
 // 3. 静的メソッドの定義
@@ -604,7 +591,7 @@ function escExit(event) {
     }
  }
  
-var DlgPaint = new CViewDLg( "塗りサポーター" );            //インスタンスを生成
+var DlgPaint = new CViewDLg();                            //インスタンスを生成
     DlgPaint.addEventListener( 'keydown',  escExit );     // ESCを監視
 
 main();
