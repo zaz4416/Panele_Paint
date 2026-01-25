@@ -98,16 +98,14 @@ ClassInheritance(CSurface, CPaletteWindow); // クラス継承
 // 1. コンストラクタ定義
 //~~~~~~~~~~~~~~~~~~~~
 function CViewDLg( DlgName ) {
-       
-    // 初期化
-    CSurface.call( this, DlgName );         // コンストラクタ
+
+    CSurface.call( this, DlgName );     // コンストラクタ
 
     // クラスへのポインタを確保
     var self = this;
 
-    var m_ToolName = cAdobeDirectObjectSelectTool;   // グループ選択
-
-    self.SetAdobeTool(m_ToolName);   // 起動時のツールを指定する
+    var StartToolName = cAdobeDirectObjectSelectTool;   // グループ選択
+    self.SetAdobeTool(StartToolName);   // 起動時のツールを指定する
 }
 
 //~~~~~~~~~~~~~~
