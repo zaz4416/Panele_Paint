@@ -120,10 +120,10 @@ CViewDLg.ObjectSelect_Func = function()
 {
     try
     {
-        var Dlg = CViewDLg.TheObj;
+        var self = CViewDLg.TheObj;
     
         app.executeMenuCommand("deselectall");               // 選択を解除
-        Dlg.SetAdobeTool(cAdobeDirectObjectSelectTool);   // 塗グループ選択
+        self.SetAdobeTool(cAdobeDirectObjectSelectTool);   // 塗グループ選択
     } // try
     catch(e)
     {
@@ -139,9 +139,9 @@ CViewDLg.EyedropperTool_Func = function()
 {
     try
     {
-        var Dlg = CViewDLg.TheObj;
+        var self = CViewDLg.TheObj;
     
-        Dlg.SetAdobeTool(cAdobeEyedropperTool);   // スポイト  
+        self.SetAdobeTool(cAdobeEyedropperTool);   // スポイト  
     } // try
     catch(e)
     {
@@ -157,18 +157,18 @@ CViewDLg.BlobBrush_Func = function()
 {
     try
     {
-        var Dlg = CViewDLg.TheObj;
+        var self = CViewDLg.TheObj;
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Blob Brush Tool')を実施するか判定
-        if ( m_GrCheckbox.value ) {
-            if ( Dlg.JugeKindOfItem() ) {
-                Dlg.SetAdobeTool(m_ToolName);
+        if ( self.m_GrCheckbox.value ) {
+            if ( self.JugeKindOfItem() ) {
+                self.SetAdobeTool(m_ToolName);
                 throw new Error("先に、パスを選択してください");
             }
         }
 
-        m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
-        Dlg.SetAdobeTool(cAdobeBlobBrushTool);   // 塗りブラシ 
+        self.m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
+        self.SetAdobeTool(cAdobeBlobBrushTool);   // 塗りブラシ 
    } // try
    catch(e)
    {
@@ -185,18 +185,18 @@ CViewDLg.Eraser_Func = function()
 {
     try
     {        
-        var Dlg = CViewDLg.TheObj;
+        var self = CViewDLg.TheObj;
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Eraser Tool')を実施するか判定
-        if ( m_GrCheckbox.value ) {
-            if ( Dlg.JugeKindOfItem() ) {
-                Dlg.SetAdobeTool(m_ToolName);
+        if ( self.m_GrCheckbox.value ) {
+            if ( self.JugeKindOfItem() ) {
+                self.SetAdobeTool(m_ToolName);
                 throw new Error("先に、パスを選択してください");
             }
         }
 
-        m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
-        Dlg.SetAdobeTool(cdAobeEraserTool);      // 消しゴム 
+        self.m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
+        self.SetAdobeTool(cdAobeEraserTool);      // 消しゴム 
     } // try
     catch(e)
     {
@@ -213,10 +213,10 @@ CViewDLg.InitRotate_Func = function()
 {
     try
     {
-        var Dlg = CViewDLg.TheObj;
+        self = CViewDLg.TheObj;
 
         app.activeDocument.activeView.rotateAngle = 0;
-        Dlg.NoSeledtedAngle();
+        self.NoSeledtedAngle();
     } // try
     catch(e)
     {
