@@ -19,7 +19,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/01/25
+// Ver.1.0 : 2026/01/28
 
 #target illustrator
 #targetengine "main"
@@ -36,13 +36,15 @@ $.evalFile(SELF.path + "/ZazLib/" + "SupprtFuncLib.jsx");
 
 
 // 言語ごとの辞書を定義
-var LangStrings = {
+var MyDictionary = {
     GUI_JSX: {
         en : "ScriptUI Dialog Builder - Export_EN.jsx",
         ja : "ScriptUI Dialog Builder - Export_JP.jsx"
     }
 };
 
+// --- LangStringsの辞書から自動翻訳処理 ---
+var LangStrings = GetWordsFromDictionary( MyDictionary );
 
  // ツール文字
  var cAdobeDirectObjectSelectTool = 'Adobe Direct Object Select Tool';      // グループ選択
