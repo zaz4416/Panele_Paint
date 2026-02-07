@@ -19,32 +19,30 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/02/04
+// Ver.1.0 : 2026/02/07
 
 #target illustrator
 #targetengine "main"
 
 
-var SELF_FILE = (function() {
-try { var path = $.fileName || Folder.current.fullName; return new File(decodeURI(path)); } catch (e) { return null; }
-})();
-var SCRIPT_DIR = (SELF_FILE !== null) ? SELF_FILE.parent : Folder.current;
-
-// 外部のJSXを読み込む
-$.evalFile(SCRIPT_DIR + "/ZazLib/" + "PaletteWindow.jsx");
-$.evalFile(SCRIPT_DIR + "/ZazLib/" + "SupprtFuncLib.jsx");
+// 外部のスクリプトを埋め込む
+#include "ZazLib/PaletteWindow.jsx"
+#include "ZazLib/SupprtFuncLib.jsx"
 
 
 // 言語ごとの辞書を定義
 var MyDictionary = {
     GUI_JSX: {
-        en : "ScriptUI Dialog Builder - Export_EN.jsx",
-        ja : "ScriptUI Dialog Builder - Export_JP.jsx"
+        en : "GUI/Panele_Paint/ScriptUI Dialog Builder - Export_EN.jsx",
+        ja : "GUI/Panele_Paint/ScriptUI Dialog Builder - Export_JP.jsx"
     }
 };
 
 // --- LangStringsの辞書から自動翻訳処理 ---
 var LangStrings = GetWordsFromDictionary( MyDictionary );
+
+// オブジェクトの最大保持数
+var _MAX_INSTANCES = 5;
 
  // ツール文字
  var cAdobeDirectObjectSelectTool = 'Adobe Direct Object Select Tool';      // グループ選択
@@ -52,6 +50,28 @@ var LangStrings = GetWordsFromDictionary( MyDictionary );
  var cAdobeBlobBrushTool          = 'Adobe Blob Brush Tool';                // 塗りブラシ
  var cdAobeEraserTool             = 'Adobe Eraser Tool';                    // 消しゴム
 
+
+
+// --- グローバル関数 -----------------------------------------------------------------
+
+/**
+ * 実行中スクリプトの親フォルダ（Folderオブジェクト）を返す。
+ * なお、戻り値の最後には/が付与される。
+ */
+function GetScriptDir() {
+    var selfFile = null;
+    try {
+        selfFile = new File(decodeURI($.fileName || Folder.current.fullName));
+    } catch (e) {
+        return Folder.current.fullName.replace(/\/*$/, "/");
+    }
+    var dirPath = (selfFile !== null) ? selfFile.parent.fullName : Folder.current.fullName;
+
+    // 末尾にスラッシュがなければ付与して返す
+    return dirPath.replace(/\/*$/, "/");
+}
+
+// ---------------------------------------------------------------------------------
 
 
 //-----------------------------------
@@ -62,8 +82,7 @@ var LangStrings = GetWordsFromDictionary( MyDictionary );
 // 1. コンストラクタ定義
 //~~~~~~~~~~~~~~~~~~~~
 function CViewDLg() {
-
-    CPaletteWindow.call( this, false /* ダイアログのリサイズ禁止 */ );     // コンストラクタ
+    CPaletteWindow.call( this, _MAX_INSTANCES, false );      // コンストラクタ
 
     // クラスへのポインタを確保
     var self = this;
@@ -71,9 +90,7 @@ function CViewDLg() {
     self.m_Dialog.opacity       = 0.7; // （不透明度）
 
     // GUI用のスクリプトを読み込む
-    var selfFile = new File($.fileName);
-    var currentDir = selfFile.parent;
-    if ( self.LoadGUIfromJSX( currentDir.fullName + "/GUI/Panele_Paint/" + LangStrings.GUI_JSX ) )
+    if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
     {
         // GUIに変更を入れる
         self.m_BtnResizeDown.onClick        = function() { self.onRotateRightClick(); }
@@ -93,7 +110,10 @@ function CViewDLg() {
         self.m_BtnCancel.onClick            = function() { self.onCloseDlgClick(); }
 
         // アイテムが選択されているか監視する
-        self.m_GrCheckbox.value = true;              
+        self.m_GrCheckbox.value = true;
+        
+        // 最後に、新しいインスタンスを追加
+        self.RegisterInstance();
     }
     else{
         alert("GUIが未定です");
@@ -109,10 +129,11 @@ function CViewDLg() {
 //~~~~~~~~~~~~~~
 ClassInheritance(CViewDLg, CPaletteWindow);
 
-//~~~~~~~~~~~~~~~~~~~~~
-// 3. 静的メソッドの定義
-//~~~~~~~~~~~~~~~~~~~~~
-CViewDLg.ObjectSelect_Func = function()
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 3. プロトタイプメソッドの定義
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CViewDLg.prototype.ObjectSelect_Func = function()
 {
     try
     {
@@ -131,7 +152,7 @@ CViewDLg.ObjectSelect_Func = function()
     } // finally
 }
 
-CViewDLg.EyedropperTool_Func = function()
+CViewDLg.prototype.EyedropperTool_Func = function()
 {
     try
     {
@@ -149,7 +170,7 @@ CViewDLg.EyedropperTool_Func = function()
     } // finally
 }
 
-CViewDLg.BlobBrush_Func = function()
+CViewDLg.prototype.BlobBrush_Func = function()
 {
     try
     {
@@ -177,7 +198,7 @@ CViewDLg.BlobBrush_Func = function()
  
 }
 
-CViewDLg.Eraser_Func = function()
+CViewDLg.prototype.Eraser_Func = function()
 {
     try
     {        
@@ -205,7 +226,7 @@ CViewDLg.Eraser_Func = function()
  
 }
 
-CViewDLg.InitRotate_Func = function()
+CViewDLg.prototype.InitRotate_Func = function()
 {
     try
     {
@@ -225,7 +246,7 @@ CViewDLg.InitRotate_Func = function()
  
 }
 
-CViewDLg.RotateRight_Func = function()
+CViewDLg.prototype.RotateRight_Func = function()
 {
     try
     {
@@ -249,7 +270,7 @@ CViewDLg.RotateRight_Func = function()
   
 }
 
-CViewDLg.RotateLeft_Func = function()
+CViewDLg.prototype.RotateLeft_Func = function()
 {
     try
     { 
@@ -273,7 +294,7 @@ CViewDLg.RotateLeft_Func = function()
   
  }
 
-CViewDLg.LeftTurn_Func = function()
+CViewDLg.prototype.LeftTurn_Func = function()
 {
     try
     {
@@ -297,7 +318,7 @@ CViewDLg.LeftTurn_Func = function()
  
 }
 
-CViewDLg.RightTurn_Func = function()
+CViewDLg.prototype.RightTurn_Func = function()
 {
     try
     {
@@ -321,7 +342,7 @@ CViewDLg.RightTurn_Func = function()
  
 }
 
-CViewDLg.UptoTurn_Func = function()
+CViewDLg.prototype.UptoTurn_Func = function()
 {
     try
     {
@@ -338,7 +359,7 @@ CViewDLg.UptoTurn_Func = function()
  
 }
 
-CViewDLg.NoCompoundFunc = function()
+CViewDLg.prototype.NoCompoundFunc = function()
 {
     try
     {
@@ -368,14 +389,10 @@ CViewDLg.NoCompoundFunc = function()
  
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 4. プロトタイプメソッドの定義
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 CViewDLg.prototype.onRotateRightClick = function() {
     try
     {
-        this.CallFunc( "RotateRight_Func" );
+        this.CallFunc( ".RotateRight_Func()" );
     }
     catch(e)
     {
@@ -386,7 +403,7 @@ CViewDLg.prototype.onRotateRightClick = function() {
 CViewDLg.prototype.onInitRotateClick = function() {
     try
     {
-        this.CallFunc( "InitRotate_Func" );
+        this.CallFunc( ".InitRotate_Func()" );
     }
     catch(e)
     {
@@ -397,7 +414,7 @@ CViewDLg.prototype.onInitRotateClick = function() {
 CViewDLg.prototype.onRotateLeftClick = function() {
     try
     {
-        this.CallFunc( "RotateLeft_Func" );
+        this.CallFunc( ".RotateLeft_Func()" );
     }
     catch(e)
     {
@@ -408,7 +425,7 @@ CViewDLg.prototype.onRotateLeftClick = function() {
 CViewDLg.prototype.onRightTurnClick = function() {
     try
     {
-        this.CallFunc( "RightTurn_Func" );
+        this.CallFunc( ".RightTurn_Func()" );
     }
     catch(e)
     {
@@ -419,7 +436,7 @@ CViewDLg.prototype.onRightTurnClick = function() {
 CViewDLg.prototype.onLeftTurnClick = function() {
     try
     {
-        this.CallFunc( "LeftTurn_Func" );
+        this.CallFunc( ".LeftTurn_Func()" );
     }
     catch(e)
     {
@@ -430,7 +447,7 @@ CViewDLg.prototype.onLeftTurnClick = function() {
 CViewDLg.prototype.onUptoTurnClick = function() {
     try
     {
-        this.CallFunc( "UptoTurn_Func" );
+        this.CallFunc( ".UptoTurn_Func()" );
     }
     catch(e)
     {
@@ -463,7 +480,7 @@ CViewDLg.prototype.onToSimlePathClick = function() {
 CViewDLg.prototype.onBlobBrushClick = function() {
     try
     {
-        this.CallFunc( "BlobBrush_Func" );
+        this.CallFunc( ".BlobBrush_Func()" );
     }
     catch(e)
     {
@@ -474,7 +491,7 @@ CViewDLg.prototype.onBlobBrushClick = function() {
 CViewDLg.prototype.onEraserClick = function() {
     try
     {
-        this.CallFunc( "Eraser_Func" );
+        this.CallFunc( ".Eraser_Func()" );
     }
     catch(e)
     {
@@ -485,7 +502,7 @@ CViewDLg.prototype.onEraserClick = function() {
 CViewDLg.prototype.onObjectSelectClick = function() {
     try
     {
-        this.CallFunc( "ObjectSelect_Func" );
+        this.CallFunc( ".ObjectSelect_Func()" );
     }
     catch(e)
     {
@@ -496,7 +513,7 @@ CViewDLg.prototype.onObjectSelectClick = function() {
 CViewDLg.prototype.onEyedropperToolClick = function() {
     try
     {
-        this.CallFunc( "EyedropperTool_Func" );
+        this.CallFunc( ".EyedropperTool_Func()" );
     }
     catch(e)
     {
@@ -518,7 +535,7 @@ CViewDLg.prototype.onFitinClick = function() {
 CViewDLg.prototype.onNoCompoundClick = function() {
     try
     {
-        this.CallFunc( "NoCompoundFunc" );
+        this.CallFunc( ".NoCompoundFunc()" );
     }
     catch(e)
     {
@@ -593,8 +610,8 @@ function escExit(event) {
     }
  }
  
-var DlgPaint = new CViewDLg();                            //インスタンスを生成
-    DlgPaint.addEventListener( 'keydown',  escExit );     // ESCを監視
+
+    
 
 main();
 
@@ -603,7 +620,12 @@ function main()
     // バージョン・チェック
     if ( appVersion()[0]  >= 24 )
     {
-        DlgPaint.ShowDlg(); 
+        // 新しいインスタンスを生成
+        var Obj  = new CViewDLg() ;
+        //Obj.addEventListener( 'keydown',  escExit );     // ESCを監視
+
+        // インスタンスを表示
+        Obj.show();
     }
     else
     {
