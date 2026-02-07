@@ -546,7 +546,7 @@ CViewDLg.prototype.onNoCompoundClick = function() {
 CViewDLg.prototype.onCloseDlgClick = function() {
     try
     {
-        this.CloseDlg();
+        this.close();
     }
     catch(e)
     {
@@ -606,7 +606,7 @@ CViewDLg.prototype.JugeKindOfItem = function() {
 function escExit(event) {
     if(event.keyName === 'Escape'){
         alert( "終わります。" );
-        DlgPaint.CloseDlg();
+        DlgPaint.close();
     }
  }
  
