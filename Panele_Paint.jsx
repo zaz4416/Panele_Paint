@@ -19,7 +19,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/02/07
+// Ver.1.0 : 2026/02/08
 
 #target illustrator
 #targetengine "main"
@@ -82,7 +82,7 @@ function GetScriptDir() {
 // 1. コンストラクタ定義
 //~~~~~~~~~~~~~~~~~~~~
 function CViewDLg( scriptName ) {
-    CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
+    CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );     // コンストラクタ
 
     // クラスへのポインタを確保
     var self = this;
@@ -135,45 +135,38 @@ ClassInheritance(CViewDLg, CPaletteWindow);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CViewDLg.prototype.ObjectSelect_Func = function()
 {
-    try
-    {
+    try {
         var self = CViewDLg.self;
     
         app.executeMenuCommand("deselectall");               // 選択を解除
         self.SetAdobeTool(cAdobeDirectObjectSelectTool);   // 塗グループ選択
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
 }
 
 CViewDLg.prototype.EyedropperTool_Func = function()
 {
-    try
-    {
+    try {
         var self = CViewDLg.self;
     
         self.SetAdobeTool(cAdobeEyedropperTool);   // スポイト  
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
 }
 
 CViewDLg.prototype.BlobBrush_Func = function()
 {
-    try
-    {
+    try {
         var self = CViewDLg.self;
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Blob Brush Tool')を実施するか判定
@@ -187,12 +180,10 @@ CViewDLg.prototype.BlobBrush_Func = function()
         self.m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
         self.SetAdobeTool(cAdobeBlobBrushTool);   // 塗りブラシ 
    } // try
-   catch(e)
-   {
+   catch(e) {
        alert( e.message );
    } // catch
-   finally
-   {
+   finally {
        //app.redraw();                                  // 再描画させる
    } // finally
  
@@ -200,8 +191,7 @@ CViewDLg.prototype.BlobBrush_Func = function()
 
 CViewDLg.prototype.Eraser_Func = function()
 {
-    try
-    {        
+    try {        
         var self = CViewDLg.self;
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Eraser Tool')を実施するか判定
@@ -215,12 +205,10 @@ CViewDLg.prototype.Eraser_Func = function()
         self.m_GrCheckbox.value = true;                  // アイテムが選択されているか監視する
         self.SetAdobeTool(cdAobeEraserTool);      // 消しゴム 
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
@@ -228,19 +216,16 @@ CViewDLg.prototype.Eraser_Func = function()
 
 CViewDLg.prototype.InitRotate_Func = function()
 {
-    try
-    {
+    try {
         self = CViewDLg.self;
 
         app.activeDocument.activeView.rotateAngle = 0;
         self.NoSeledtedAngle();
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
@@ -248,8 +233,7 @@ CViewDLg.prototype.InitRotate_Func = function()
 
 CViewDLg.prototype.RotateRight_Func = function()
 {
-    try
-    {
+    try {
         var vtac = 0.1;
         var vang = 5;         
         //app.activeDocument.views[0].zoom += vtac;     // zoom
@@ -259,12 +243,10 @@ CViewDLg.prototype.RotateRight_Func = function()
             app.activeDocument.activeView.rotateAngle += vang;
         }
     } // try
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     } // catch
-    finally
-    {
+    finally {
         //app.redraw();                                  // 再描画させる
     } // finally
   
@@ -272,8 +254,7 @@ CViewDLg.prototype.RotateRight_Func = function()
 
 CViewDLg.prototype.RotateLeft_Func = function()
 {
-    try
-    { 
+    try { 
         var vtac = 0.1;
         var vang = 5;          
         //app.activeDocument.views[0].zoom -= vtac;     // zoom
@@ -283,12 +264,10 @@ CViewDLg.prototype.RotateLeft_Func = function()
             app.activeDocument.activeView.rotateAngle -= vang;
         }              
     } // try
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     } // catch
-    finally
-    {
+    finally {
         //app.redraw();                                  // 再描画させる
     } // finally
   
@@ -296,8 +275,7 @@ CViewDLg.prototype.RotateLeft_Func = function()
 
 CViewDLg.prototype.LeftTurn_Func = function()
 {
-    try
-    {
+    try {
         var angleV = app.activeDocument.activeView.rotateAngle;
         angleV -=90;
         if ( angleV < -180 )
@@ -307,12 +285,10 @@ CViewDLg.prototype.LeftTurn_Func = function()
         }
         app.activeDocument.activeView.rotateAngle = angleV;
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
@@ -320,8 +296,7 @@ CViewDLg.prototype.LeftTurn_Func = function()
 
 CViewDLg.prototype.RightTurn_Func = function()
 {
-    try
-    {
+    try {
         var angleV = app.activeDocument.activeView.rotateAngle;
         angleV +=90;
         if ( angleV > 180 )
@@ -331,12 +306,10 @@ CViewDLg.prototype.RightTurn_Func = function()
         }
         app.activeDocument.activeView.rotateAngle = angleV;
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
@@ -344,16 +317,13 @@ CViewDLg.prototype.RightTurn_Func = function()
 
 CViewDLg.prototype.UptoTurn_Func = function()
 {
-    try
-    {
+    try {
         app.activeDocument.activeView.rotateAngle += 180;
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
@@ -361,8 +331,7 @@ CViewDLg.prototype.UptoTurn_Func = function()
 
 CViewDLg.prototype.NoCompoundFunc = function()
 {
-    try
-    {
+    try {
         var ActiveLayer = activeDocument.activeLayer;
         var doc = app.activeDocument;
         var selectionCount = doc.selection.length;
@@ -378,163 +347,134 @@ CViewDLg.prototype.NoCompoundFunc = function()
             alert("先に、アイテムを１つだけに選択し直してください");
         }
     } // try
-    catch(e)
-    {
+    catch(e) {
        alert( e.message );
     } // catch
-    finally
-    {
+    finally {
        //app.redraw();                                  // 再描画させる
     } // finally
  
 }
 
 CViewDLg.prototype.onRotateRightClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".RotateRight_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     } 
 }
 
 CViewDLg.prototype.onInitRotateClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".InitRotate_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     } 
 }
 
 CViewDLg.prototype.onRotateLeftClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".RotateLeft_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onRightTurnClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".RightTurn_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onLeftTurnClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".LeftTurn_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onUptoTurnClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".UptoTurn_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onUndoClick = function() {
-    try
-    {
+    try {
         app.executeMenuCommand("undo");
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onToSimlePathClick = function() {
-    try
-    {
+    try {
         app.executeMenuCommand("simplify menu item");
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onBlobBrushClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".BlobBrush_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onEraserClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".Eraser_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onObjectSelectClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".ObjectSelect_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onEyedropperToolClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".EyedropperTool_Func()" );
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onFitinClick = function() {
-    try
-    {
+    try {
         app.executeMenuCommand('fitin');
     }
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
     }
 }
 
 CViewDLg.prototype.onNoCompoundClick = function() {
-    try
-    {
+    try {
         this.CallFunc( ".NoCompoundFunc()" );
     }
     catch(e)
@@ -544,12 +484,10 @@ CViewDLg.prototype.onNoCompoundClick = function() {
 }
 
 CViewDLg.prototype.onCloseDlgClick = function() {
-    try
-    {
+    try {
         this.close();
     }
-    catch(e)
-    {
+    catch(e){
         alert( e.message );
     }
 }
