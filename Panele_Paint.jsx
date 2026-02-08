@@ -25,9 +25,9 @@
 #targetengine "main"
 
 
-// スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
-$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
-$.evalFile(GetScriptDir() + "ZazLib/SupprtFuncLib.jsx");
+// 外部のスクリプトを埋め込む
+#include "ZazLib/PaletteWindow.jsx"
+#include "ZazLib/SupprtFuncLib.jsx"
 
 
 // 言語ごとの辞書を定義
@@ -81,8 +81,8 @@ function GetScriptDir() {
 //~~~~~~~~~~~~~~~~~~~~
 // 1. コンストラクタ定義
 //~~~~~~~~~~~~~~~~~~~~
-function CViewDLg( scriptName ) {
-    CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
+function CViewDLg() {
+    CPaletteWindow.call( this, _MAX_INSTANCES, false );      // コンストラクタ
 
     // クラスへのポインタを確保
     var self = this;
@@ -619,17 +619,10 @@ function main()
 {    
     // バージョン・チェック
     if ( appVersion()[0]  >= 24 )
-    {        // 実行中のスクリプト名を取得（拡張子なし）
-        var scriptName = decodeURI(File($.fileName).name).replace(/\.[^\.]+$/, "");
-
+    {
         // 新しいインスタンスを生成
-        var Obj  = new CViewDLg( scriptName ) ;
+        var Obj  = new CViewDLg() ;
         //Obj.addEventListener( 'keydown',  escExit );     // ESCを監視
-
-        // インデックスをタイトルの先頭に表示
-        var Index = Obj.GetGlobalIndex();
-        var Title = Obj.GetDialogTitle();
-        Obj.SetDialogTitle( "[" + Index + "]" + Title );
 
         // インスタンスを表示
         Obj.show();
