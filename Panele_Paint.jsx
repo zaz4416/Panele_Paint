@@ -19,7 +19,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/02/08
+// Ver.1.0 : 2026/02/10
 
 #target illustrator
 #targetengine "main"
@@ -35,6 +35,14 @@ var MyDictionary = {
     GUI_JSX: {
         en : "GUI/Panele_Paint/ScriptUI Dialog Builder - Export_EN.jsx",
         ja : "GUI/Panele_Paint/ScriptUI Dialog Builder - Export_JP.jsx"
+    },
+     Msg_Require: {
+        en : "This script requires Illustrator 2020.",
+        ja : "このスクリプトは Illustrator 2020以降に対応しています。"
+    },
+    Msg_cant_run: {
+        en: "Can't run",
+        ja: "これ以上、起動できません"
     }
 };
 
@@ -42,7 +50,7 @@ var MyDictionary = {
 var LangStrings = GetWordsFromDictionary( MyDictionary );
 
 // オブジェクトの最大保持数
-var _MAX_INSTANCES = 5;
+var _MAX_INSTANCES = 1;
 
  // ツール文字
  var cAdobeDirectObjectSelectTool = 'Adobe Direct Object Select Tool';      // グループ選択
@@ -87,41 +95,41 @@ function CViewDLg( scriptName ) {
     // クラスへのポインタを確保
     var self = this;
 
-    self.m_Dialog.opacity       = 0.7; // （不透明度）
+    if ( self.IsDialg()) {
+        self.m_Dialog.opacity       = 0.7; // （不透明度）
 
-    // GUI用のスクリプトを読み込む
-    if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
-    {
-        // GUIに変更を入れる
-        self.m_BtnResizeDown.onClick        = function() { self.onRotateRightClick(); }
-        self.m_BtnInitRotate.onClick        = function() { self.onInitRotateClick(); }
-        self.m_BtnResizeUp.onClick          = function() { self.onRotateLeftClick(); }
-        self.m_RadioBtnAngle02.onClick      = function() { self.onRightTurnClick(); }
-        self.m_RadioBtnAngle01.onClick      = function() { self.onLeftTurnClick(); }
-        self.m_RadioBtnAngle03.onClick      = function() { self.onUptoTurnClick(); }
-        self.m_BtnUndo.onClick              = function() { self.onUndoClick(); }
-        self.m_BtnSimplify.onClick          = function() { self.onToSimlePathClick(); }
-        self.m_RadioBtnBlobBrush.onClick    = function() { self.onBlobBrushClick(); }
-        self.m_RadioBtnEraser.onClick       = function() { self.onEraserClick(); }
-        self.m_RadioBtnObjectSelect.onClick = function() { self.onObjectSelectClick(); }
-        self.m_objRb01.onClick              = function() { self.onEyedropperToolClick(); }
-        self.m_BtnFitIn.onClick             = function() { self.onFitinClick() }
-        self.m_BtnFillSelectedArea.onClick  = function() { self.onNoCompoundClick(); }
-        self.m_BtnCancel.onClick            = function() { self.onCloseDlgClick(); }
+        // GUI用のスクリプトを読み込む
+        if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) ) {
+            // GUIに変更を入れる
+            self.m_BtnResizeDown.onClick        = function() { self.onRotateRightClick(); }
+            self.m_BtnInitRotate.onClick        = function() { self.onInitRotateClick(); }
+            self.m_BtnResizeUp.onClick          = function() { self.onRotateLeftClick(); }
+            self.m_RadioBtnAngle02.onClick      = function() { self.onRightTurnClick(); }
+            self.m_RadioBtnAngle01.onClick      = function() { self.onLeftTurnClick(); }
+            self.m_RadioBtnAngle03.onClick      = function() { self.onUptoTurnClick(); }
+            self.m_BtnUndo.onClick              = function() { self.onUndoClick(); }
+            self.m_BtnSimplify.onClick          = function() { self.onToSimlePathClick(); }
+            self.m_RadioBtnBlobBrush.onClick    = function() { self.onBlobBrushClick(); }
+            self.m_RadioBtnEraser.onClick       = function() { self.onEraserClick(); }
+            self.m_RadioBtnObjectSelect.onClick = function() { self.onObjectSelectClick(); }
+            self.m_objRb01.onClick              = function() { self.onEyedropperToolClick(); }
+            self.m_BtnFitIn.onClick             = function() { self.onFitinClick() }
+            self.m_BtnFillSelectedArea.onClick  = function() { self.onNoCompoundClick(); }
+            self.m_BtnCancel.onClick            = function() { self.onCloseDlgClick(); }
 
-        // アイテムが選択されているか監視する
-        self.m_GrCheckbox.value = true;
-        
-        // 最後に、新しいインスタンスを追加
-        self.RegisterInstance();
+            // アイテムが選択されているか監視する
+            self.m_GrCheckbox.value = true;
+            
+            // 最後に、新しいインスタンスを追加
+            self.RegisterInstance();
+
+            // RegisterInstance()後に実施すべきことを記述
+            var StartToolName = cAdobeDirectObjectSelectTool;   // グループ選択
+            self.SetAdobeTool(StartToolName);   // 起動時のツールを指定する
+        } else {
+            alert("Unloaded GUI.");
+        }
     }
-    else{
-        alert("GUIが未定です");
-        return;
-    }
-
-    var StartToolName = cAdobeDirectObjectSelectTool;   // グループ選択
-    self.SetAdobeTool(StartToolName);   // 起動時のツールを指定する
 }
 
 //~~~~~~~~~~~~~~
@@ -136,7 +144,7 @@ ClassInheritance(CViewDLg, CPaletteWindow);
 CViewDLg.prototype.ObjectSelect_Func = function()
 {
     try {
-        var self = CViewDLg.self;
+        var self = this.GetGlobalDialog();
     
         app.executeMenuCommand("deselectall");               // 選択を解除
         self.SetAdobeTool(cAdobeDirectObjectSelectTool);   // 塗グループ選択
@@ -152,7 +160,7 @@ CViewDLg.prototype.ObjectSelect_Func = function()
 CViewDLg.prototype.EyedropperTool_Func = function()
 {
     try {
-        var self = CViewDLg.self;
+        var self = this.GetGlobalDialog();
     
         self.SetAdobeTool(cAdobeEyedropperTool);   // スポイト  
     } // try
@@ -167,7 +175,7 @@ CViewDLg.prototype.EyedropperTool_Func = function()
 CViewDLg.prototype.BlobBrush_Func = function()
 {
     try {
-        var self = CViewDLg.self;
+        var self = this.GetGlobalDialog();
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Blob Brush Tool')を実施するか判定
         if ( self.m_GrCheckbox.value ) {
@@ -192,7 +200,7 @@ CViewDLg.prototype.BlobBrush_Func = function()
 CViewDLg.prototype.Eraser_Func = function()
 {
     try {        
-        var self = CViewDLg.self;
+        var self = this.GetGlobalDialog();
 
         // アイテムが選択されている条件で、app.selectTool('Adobe Eraser Tool')を実施するか判定
         if ( self.m_GrCheckbox.value ) {
@@ -217,7 +225,7 @@ CViewDLg.prototype.Eraser_Func = function()
 CViewDLg.prototype.InitRotate_Func = function()
 {
     try {
-        self = CViewDLg.self;
+        self = this.GetGlobalDialog();
 
         app.activeDocument.activeView.rotateAngle = 0;
         self.NoSeledtedAngle();
@@ -493,15 +501,16 @@ CViewDLg.prototype.onCloseDlgClick = function() {
 }
 
 CViewDLg.prototype.NoSeledtedAngle = function() {
-    this.m_RadioBtnAngle01.value = false;
-    this.m_RadioBtnAngle02.value = false;
-    this.m_RadioBtnAngle03.value = false;
+    var self = this.GetGlobalDialog();
+    self.m_RadioBtnAngle01.value = false;
+    self.m_RadioBtnAngle02.value = false;
+    self.m_RadioBtnAngle03.value = false;
 }
 
 CViewDLg.prototype.SetAdobeTool = function(TlName) {
     m_ToolName = TlName;
     app.selectTool(m_ToolName);
-    var self = this;
+    var self = this.GetGlobalDialog();
         
     self.m_RadioBtnObjectSelect.value = false;
     self.m_objRb01.value = false;
@@ -555,26 +564,32 @@ main();
 
 function main()
 {    
+     var appName = app.name;
+    // 実行結果の例:
+    // "Adobe Illustrator"
+    // "Adobe Photoshop"
+
     // バージョン・チェック
-    if ( appVersion()[0]  >= 24 )
-    {        // 実行中のスクリプト名を取得（拡張子なし）
+    if ( appName === "Adobe Illustrator" && appVersion()[0]  >= 24 ) {
+        // 実行中のスクリプト名を取得（拡張子なし）
         var scriptName = decodeURI(File($.fileName).name).replace(/\.[^\.]+$/, "");
 
         // 新しいインスタンスを生成
         var Obj  = new CViewDLg( scriptName ) ;
         //Obj.addEventListener( 'keydown',  escExit );     // ESCを監視
 
-        // インデックスをタイトルの先頭に表示
-        var Index = Obj.GetGlobalIndex();
-        var Title = Obj.GetDialogTitle();
-        Obj.SetDialogTitle( "[" + Index + "]" + Title );
+        if ( Obj.IsDialg() ) {
+            // インデックスをタイトルの先頭に表示
+            var Index = Obj.GetGlobalIndex();
+            var Title = Obj.GetDialogTitle();
+            Obj.SetDialogTitle( "[" + Index + "]" + Title );
 
-        // インスタンスを表示
-        Obj.show();
-    }
-    else
-    {
-         var msg = {en : 'This script requires Illustrator 2020.', ja : 'このスクリプトは Illustrator 2020以降に対応しています。'} ;
-        alert(msg) ; 
+            // インスタンスを表示
+            Obj.show();
+        } else {
+            alert( LangStrings.Msg_cant_run );
+        }
+    } else {
+        alert( LangStrings.Msg_Require ); 
     }
 }
