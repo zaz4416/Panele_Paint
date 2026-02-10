@@ -25,9 +25,9 @@
 #targetengine "main"
 
 
-// スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
-$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
-$.evalFile(GetScriptDir() + "ZazLib/SupprtFuncLib.jsx");
+// 外部のスクリプトを埋め込む
+#include "ZazLib/PaletteWindow.jsx"
+#include "ZazLib/SupprtFuncLib.jsx"
 
 
 // 言語ごとの辞書を定義
@@ -575,7 +575,7 @@ function main()
         var scriptName = decodeURI(File($.fileName).name).replace(/\.[^\.]+$/, "");
 
         // 新しいインスタンスを生成
-        var Obj  = new CViewDLg( scriptName ) ;
+        var Obj  = new CViewDLg() ;
         //Obj.addEventListener( 'keydown',  escExit );     // ESCを監視
 
         if ( Obj.IsDialg() ) {
