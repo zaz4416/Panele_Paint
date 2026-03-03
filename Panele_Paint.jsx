@@ -505,72 +505,41 @@ CViewDLg.prototype.onCloseDlgClick = function() {
 }
 
 CViewDLg.prototype.onMakeGroupClick = function() {
-    try
-    {
-        var self = this;
-
-// 1. 実行中のこのスクリプトがあるディレクトリを確実に取得
-var currentDir = new File($.fileName).path; 
-
-alert(currentDir)
-
-// 2. パスを結合（スラッシュの重複を防ぐ）
-var targetFilePath = currentDir + "/ZazLib/GroupUp.jsx";
-var targetFile = new File(targetFilePath);
-
-alert(targetFile)
-
-// パスを一度デコードし、Fileオブジェクトにする
-var scriptFile = new File(decodeURI(targetFile));
-
-if (scriptFile.exists) {
     try {
-        $.evalFile(scriptFile);
-    } catch (e) {
-        // ファイルは見つかったが、中身のコードでエラーが起きた場合
-        alert("スクリプト実行エラー (" + scriptFile.name + "):\n" + e.message + "\n行: " + e.line);
+        this.CallFunc( ".MakeGroup_Func()" );
     }
-} else {
-    // 物理的にファイルがない場合
-    alert("ファイルが実在しません:\n" + scriptFile.fsName);
+    catch(e) {
+        alert( e.message );
+    }
 }
 
-return;
+CViewDLg.prototype.MakeGroup_Func = function() {
+    try
+    {
+        self = this.GetGlobalDialog();
 
-        app.activeDocument = app.documents[0]; // 自分を自分に代入して強制活性化
-        app.executeMenuCommand('deselectall'); // ダミー操作でロックを解除
+        if (app.documents.length > 0) {
+            var thePathObj = app.activeDocument.selection;	// 選択中のオブジェクトを取得
 
-        // 1. まず「0番目のドキュメント」という実体を掴む（アクティブかどうかを無視）
-        var doc = app.documents[0]; 
-        
-        // 2. そのドキュメントに対して「選択物」を要求する
-        var thePathObj = doc.selection; 
+            // １つのグループが選択されているかを確認する
+            if ( thePathObj[0] == undefined ) {   
+                throw new Error("グループを1づだけ選択してね");
+            }
+            
+            if ( ! KindOfItem( thePathObj, cKindOfGroupItem) ) {
+                // 選択されているオブジェクトがグループではない場合に、重ね順>最前面へ
+                app.executeMenuCommand( "sendToFront" );
+            }
 
-        //var thePathObj = app.activeDocument.selection;	// 選択中のオブジェクトを取得
-        alert("bbb")
-
-        // １つのグループが選択されているかを確認する
-        if ( thePathObj[0] == undefined )
-       {
-           throw new Error("グループを1づだけ選択してね");
-       }
-        
-        if ( ! KindOfItem( thePathObj, cKindOfGroupItem) )
-        {
-            // 選択されているオブジェクトがグループではない場合に、重ね順>最前面へ
-            app.executeMenuCommand( "sendToFront" );
+            var NewGp = AddGroup( self.m_MkGroupName.text );         // グループ追加
+            MoveToGroup( NewGp );                       // 追加したグループ内に、オブジェクトを移動させる
         }
 
-        var NewGp = AddGroup( "<GpItem>" );         // グループ追加
-        MoveToGroup( NewGp );                       // 追加したグループ内に、オブジェクトを移動させる
     } // try
-    catch(e)
-    {
+    catch(e) {
         alert( e.message );
-        return false;
     } // catch
-    finally
-    {
+    finally {
         app.redraw();                               // 再描画させる
     } // finally
 }
