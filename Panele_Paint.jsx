@@ -119,6 +119,7 @@ function CViewDLg( scriptName ) {
             self.m_BtnFitIn.onClick             = function() { self.onFitinClick() }
             self.m_BtnFillSelectedArea.onClick  = function() { self.onNoCompoundClick(); }
             self.m_BtnCancel.onClick            = function() { self.onCloseDlgClick(); }
+            self.m_BtnMakeGroup.onClick         = function() { self.onMakeGroupClick(); }
 
             // アイテムが選択されているか監視する
             self.m_GrCheckbox.value = true;
@@ -501,6 +502,46 @@ CViewDLg.prototype.onCloseDlgClick = function() {
     catch(e){
         alert( e.message );
     }
+}
+
+CViewDLg.prototype.onMakeGroupClick = function() {
+    try {
+        this.CallFunc( ".MakeGroup_Func()" );
+    }
+    catch(e) {
+        alert( e.message );
+    }
+}
+
+CViewDLg.prototype.MakeGroup_Func = function() {
+    try
+    {
+        self = this.GetGlobalDialog();
+
+        if (app.documents.length > 0) {
+            var thePathObj = app.activeDocument.selection;	// 選択中のオブジェクトを取得
+
+            // １つのグループが選択されているかを確認する
+            if ( thePathObj[0] == undefined ) {   
+                throw new Error("グループを1づだけ選択してね");
+            }
+            
+            if ( ! KindOfItem( thePathObj, cKindOfGroupItem) ) {
+                // 選択されているオブジェクトがグループではない場合に、重ね順>最前面へ
+                app.executeMenuCommand( "sendToFront" );
+            }
+
+            var NewGp = AddGroup( self.m_MkGroupName.text );         // グループ追加
+            MoveToGroup( NewGp );                       // 追加したグループ内に、オブジェクトを移動させる
+        }
+
+    } // try
+    catch(e) {
+        alert( e.message );
+    } // catch
+    finally {
+        app.redraw();                               // 再描画させる
+    } // finally
 }
 
 CViewDLg.prototype.NoSeledtedAngle = function() {
