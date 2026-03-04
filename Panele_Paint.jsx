@@ -6,7 +6,6 @@
 
 // https://ten-artai.com/2015/12/320/#google_vignette.  //正統派のエフェクトを扱う例
 // https://webtan.impress.co.jp/e/2016/06/07/23018　　　 // 外字
-// https://scriptui.joonas.me/                          // ScriptUI Dialog Builder.
 
 
 // 今見えているウィンドウの大きさ
@@ -19,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/02/10
+// Ver.1.0 : 2026/03/04
 
 #target illustrator
 #targetengine "main"
@@ -104,22 +103,22 @@ function CViewDLg( scriptName ) {
         // GUI用のスクリプトを読み込む
         if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) ) {
             // GUIに変更を入れる
-            self.m_BtnResizeDown.onClick        = function() { self.onRotateRightClick(); }
-            self.m_BtnInitRotate.onClick        = function() { self.onInitRotateClick(); }
-            self.m_BtnResizeUp.onClick          = function() { self.onRotateLeftClick(); }
-            self.m_RadioBtnAngle02.onClick      = function() { self.onRightTurnClick(); }
-            self.m_RadioBtnAngle01.onClick      = function() { self.onLeftTurnClick(); }
-            self.m_RadioBtnAngle03.onClick      = function() { self.onUptoTurnClick(); }
-            self.m_BtnUndo.onClick              = function() { self.onUndoClick(); }
-            self.m_BtnSimplify.onClick          = function() { self.onToSimlePathClick(); }
-            self.m_RadioBtnBlobBrush.onClick    = function() { self.onBlobBrushClick(); }
-            self.m_RadioBtnEraser.onClick       = function() { self.onEraserClick(); }
-            self.m_RadioBtnObjectSelect.onClick = function() { self.onObjectSelectClick(); }
-            self.m_objRb01.onClick              = function() { self.onEyedropperToolClick(); }
-            self.m_BtnFitIn.onClick             = function() { self.onFitinClick() }
-            self.m_BtnFillSelectedArea.onClick  = function() { self.onNoCompoundClick(); }
-            self.m_BtnCancel.onClick            = function() { self.onCloseDlgClick(); }
-            self.m_BtnMakeGroup.onClick         = function() { self.onMakeGroupClick(); }
+            self.m_BtnResizeDown.onClick        = function() { self.CallFunc( ".RotateRight_Func()"    ); }
+            self.m_BtnInitRotate.onClick        = function() { self.CallFunc( ".InitRotate_Func()"     ); }
+            self.m_BtnResizeUp.onClick          = function() { self.CallFunc( ".RotateLeft_Func()"     ); }
+            self.m_RadioBtnAngle02.onClick      = function() { self.CallFunc( ".RightTurn_Func()"      ); }
+            self.m_RadioBtnAngle01.onClick      = function() { self.CallFunc( ".LeftTurn_Func()"       ); }
+            self.m_RadioBtnAngle03.onClick      = function() { self.CallFunc( ".UptoTurn_Func()"       ); }
+            self.m_RadioBtnBlobBrush.onClick    = function() { self.CallFunc( ".BlobBrush_Func()"      ); }
+            self.m_RadioBtnEraser.onClick       = function() { self.CallFunc( ".Eraser_Func()"         ); }
+            self.m_RadioBtnObjectSelect.onClick = function() { self.CallFunc( ".ObjectSelect_Func()"   ); }
+            self.m_objRb01.onClick              = function() { self.CallFunc( ".EyedropperTool_Func()" ); }
+            self.m_BtnFillSelectedArea.onClick  = function() { self.CallFunc( ".NoCompoundFunc()"      ); }
+            self.m_BtnMakeGroup.onClick         = function() { self.CallFunc( ".MakeGroup_Func()"      ); }
+            self.m_BtnUndo.onClick              = function() { app.executeMenuCommand("undo"              ); }
+            self.m_BtnSimplify.onClick          = function() { app.executeMenuCommand("simplify menu item"); }
+            self.m_BtnFitIn.onClick             = function() { app.executeMenuCommand('fitin'             ); }
+            self.m_BtnCancel.onClick            = function() { self.close(); }
 
             // アイテムが選択されているか監視する
             self.m_GrCheckbox.value = true;
@@ -366,151 +365,6 @@ CViewDLg.prototype.NoCompoundFunc = function()
        //app.redraw();                                  // 再描画させる
     } // finally
  
-}
-
-CViewDLg.prototype.onRotateRightClick = function() {
-    try {
-        this.CallFunc( ".RotateRight_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    } 
-}
-
-CViewDLg.prototype.onInitRotateClick = function() {
-    try {
-        this.CallFunc( ".InitRotate_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    } 
-}
-
-CViewDLg.prototype.onRotateLeftClick = function() {
-    try {
-        this.CallFunc( ".RotateLeft_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onRightTurnClick = function() {
-    try {
-        this.CallFunc( ".RightTurn_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onLeftTurnClick = function() {
-    try {
-        this.CallFunc( ".LeftTurn_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onUptoTurnClick = function() {
-    try {
-        this.CallFunc( ".UptoTurn_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onUndoClick = function() {
-    try {
-        app.executeMenuCommand("undo");
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onToSimlePathClick = function() {
-    try {
-        app.executeMenuCommand("simplify menu item");
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onBlobBrushClick = function() {
-    try {
-        this.CallFunc( ".BlobBrush_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onEraserClick = function() {
-    try {
-        this.CallFunc( ".Eraser_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onObjectSelectClick = function() {
-    try {
-        this.CallFunc( ".ObjectSelect_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onEyedropperToolClick = function() {
-    try {
-        this.CallFunc( ".EyedropperTool_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onFitinClick = function() {
-    try {
-        app.executeMenuCommand('fitin');
-    }
-    catch(e) {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onNoCompoundClick = function() {
-    try {
-        this.CallFunc( ".NoCompoundFunc()" );
-    }
-    catch(e)
-    {
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onCloseDlgClick = function() {
-    try {
-        this.close();
-    }
-    catch(e){
-        alert( e.message );
-    }
-}
-
-CViewDLg.prototype.onMakeGroupClick = function() {
-    try {
-        this.CallFunc( ".MakeGroup_Func()" );
-    }
-    catch(e) {
-        alert( e.message );
-    }
 }
 
 CViewDLg.prototype.MakeGroup_Func = function() {
