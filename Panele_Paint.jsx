@@ -232,6 +232,8 @@ CViewDLg.prototype.InitRotate_Func = function()
 
         app.activeDocument.activeView.rotateAngle = 0;
         self.NoSeledtedAngle();
+    
+        //showStaticGridSwatchDialog();
     } // try
     catch(e) {
        alert( e.message );
@@ -446,6 +448,148 @@ CViewDLg.prototype.JugeKindOfItem = function() {
 
     return tFlag;
 }
+
+
+
+
+
+/**
+ * 全スウォッチを横24個のタイルで常時表示するビューアー
+ */
+function showStaticGridSwatchDialog() {
+    if (app.documents.length === 0) return;
+
+    var doc = app.activeDocument;
+    var tileSize = 15;   
+    var gap = 1;         
+    var maxCols = 24;    
+    var viewHeight = 600; // 24行程度が表示される高さ
+
+    var win = new Window("dialog", "全スウォッチ・グリッド (固定表示)", undefined);
+    win.orientation = "column";
+    win.alignChildren = ["fill", "top"];
+
+    var mainGrp = win.add("group");
+    mainGrp.orientation = "row";
+    mainGrp.alignChildren = ["left", "fill"];
+
+    // スクロールエリア（横幅を24個分に固定）
+    var scrollArea = mainGrp.add("panel", [0, 0, (tileSize + gap) * maxCols + 40, viewHeight]);
+    var innerGrp = scrollArea.add("group");
+    innerGrp.orientation = "column";
+    innerGrp.alignChildren = ["left", "top"];
+    innerGrp.spacing = 10; // グループ間の余白
+
+    // --- データ収集とUI構築 ---
+    var groupsData = [];
+    
+    // 1. 未分類
+    var ungrouped = { name: "（未分類）", swatches: [] };
+    for (var i = 0; i < doc.swatches.length; i++) {
+        var sw = doc.swatches[i];
+        if (sw.name === "[None]" || sw.name === "[Registration]") continue;
+        if (!isSwInAnyGroup(doc, sw)) ungrouped.swatches.push(sw);
+    }
+    if (ungrouped.swatches.length > 0) groupsData.push(ungrouped);
+
+    // 2. 各グループ
+    for (var g = 0; g < doc.swatchGroups.length; g++) {
+        var sg = doc.swatchGroups[g];
+        if (sg.name === "") continue;
+        groupsData.push({ name: sg.name, swatches: sg.getAllSwatches() });
+    }
+
+    // --- メインループ：タイルを配置 ---
+    for (var i = 0; i < groupsData.length; i++) {
+        var gData = groupsData[i];
+        
+        // グループ名表示
+        var head = innerGrp.add("statictext", undefined, " ■ " + gData.name);
+        head.graphics.font = ScriptUI.newFont("Tahoma", "BOLD", 11);
+
+        // タイル格納用（ここでの折り畳み処理は削除）
+        var tileContainer = innerGrp.add("group");
+        tileContainer.orientation = "column";
+        tileContainer.spacing = gap;
+
+        var sws = gData.swatches;
+        var rowCount = Math.ceil(sws.length / maxCols);
+
+        for (var r = 0; r < rowCount; r++) {
+            var row = tileContainer.add("group");
+            row.orientation = "row";
+            row.spacing = gap;
+
+            for (var c = 0; c < maxCols; c++) {
+                var idx = r * maxCols + c;
+                if (idx >= sws.length) break;
+
+                (function() {
+                    var targetSw = sws[idx];
+                    var chip = row.add("customview", [0, 0, tileSize, tileSize]);
+                    
+                    chip.myColor = getRGBFromSwatch(targetSw) || [200, 200, 200];
+                    chip.swName = targetSw.name;
+                    chip.helpTip = targetSw.name;
+
+                    chip.onDraw = function() {
+                        var g = this.graphics;
+                        var rgb = this.myColor;
+                        var brush = g.newBrush(g.BrushType.SOLID_COLOR, [rgb[0]/255, rgb[1]/255, rgb[2]/255, 1]);
+                        g.rectPath(0, 0, this.size.width, this.size.height);
+                        g.fillPath(brush);
+                        g.strokePath(g.newPen(g.PenType.SOLID_COLOR, [0.3, 0.3, 0.3, 1], 1));
+                    };
+
+                    chip.addEventListener("mousedown", function() {
+                        try {
+                            app.activeDocument.defaultFillColor = app.activeDocument.swatches.getByName(this.swName).color;
+                            app.redraw();
+                        } catch(e) {}
+                    });
+                })();
+            }
+        }
+    }
+
+    // --- スクロールバー ---
+    var sb = mainGrp.add("scrollbar", [0, 0, 20, viewHeight], 0, 0, 10);
+    function updateScrollbar() {
+        win.layout.layout(true);
+        sb.maxvalue = Math.max(0, innerGrp.size.height - viewHeight);
+    }
+    sb.onChanging = function() { innerGrp.location.y = -this.value; };
+
+    var closeBtn = win.add("button", undefined, "閉じる", {name: "ok"});
+    win.onShow = function() { updateScrollbar(); };
+    win.show();
+}
+
+/** 補助関数（変更なし） **/
+function isSwInAnyGroup(doc, sw) {
+    for (var i = 0; i < doc.swatchGroups.length; i++) {
+        var sg = doc.swatchGroups[i];
+        if (sg.name === "") continue;
+        var sList = sg.getAllSwatches();
+        for (var j = 0; j < sList.length; j++) if (sList[j].name === sw.name) return true;
+    }
+    return false;
+}
+
+function getRGBFromSwatch(sw) {
+    var c = sw.color;
+    if (c.typename === "SpotColor") c = c.spot.color;
+    if (c.typename === "RGBColor") return [c.red, c.green, c.blue];
+    if (c.typename === "CMYKColor") {
+        return [255*(1-c.cyan/100)*(1-c.black/100), 255*(1-c.magenta/100)*(1-c.black/100), 255*(1-c.yellow/100)*(1-c.black/100)];
+    }
+    if (c.typename === "GrayColor") { var v = 255 - (c.gray * 2.55); return [v,v,v]; }
+    return null;
+}
+
+
+
+
 
 
 function escExit(event) {
