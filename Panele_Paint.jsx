@@ -18,7 +18,7 @@
 //activeDocument.fullName.fsName.split("/").reverse()[0].split(".")[0]
 
 
-// Ver.1.0 : 2026/03/04
+// Ver.1.0 : 2026/03/19
 
 #target illustrator
 #targetengine "main"
@@ -601,8 +601,8 @@ function escExit(event) {
  
 
     
-
-main();
+// main関数を起動
+runMain(main);
 
 function main()
 {    
