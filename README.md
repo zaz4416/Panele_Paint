@@ -2,7 +2,7 @@
 
 動作環境
 Adobe社のイラストレータで動作します。
-source-full.zip　をダウンロードしてください。
+Panele_Paint_for_Adobe_Illustrator-**.zip　をダウンロードしてください。
 
 動作概要
 塗り作業をサポートするためのパネルを表示します。
