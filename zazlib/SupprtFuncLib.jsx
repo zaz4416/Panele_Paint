@@ -21,6 +21,7 @@
 // http://data.openspc2.org/reibun/Illustrator/ref/index.html // Illustrator JavaScript Reference イラストレーター JavaScript リファレンス
 // https://bankuru01.com/text-with-illustrators-text-with-illustrators/ // illustratorのスクリプト機能で［テキスト］を操るサンプルコード
 // https://zenn.dev/penguin4731/articles/6f3289d9ad3b8d // Adobe Illustratorのスクリプトを作る方法( ダイアログ関連 )
+// https://judicious-night-bca.notion.site/app-executeMenuCommand-43b5a4b7a99d4ba2befd1798ba357b1a	// app.executeMenuCommand
 // https://judicious-night-bca.notion.site/app-selectTool-3ed867bcb69340ad9e1308c41f298ff3 // app.selectTool, ツールを切り替えるメソッドです。Illustrator 2020(v24)から追加されました。
 // https://sttk3.com/blog/tips/illustrator/scripting-reference.html .// いろいろ書いてある
 // https://www.ddc.co.jp/dtp/archives/20160222/150530.html// バージョン情報

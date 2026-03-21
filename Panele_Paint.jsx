@@ -117,12 +117,13 @@ function CViewDLg( scriptName ) {
             self.m_BtnFillSelectedArea.onClick  = function() { self.CallFunc( ".NoCompoundFunc()"      ); }
             self.m_BtnMakeGroup.onClick         = function() { self.CallFunc( ".MakeGroup_Func()"      ); }
             self.m_RadioBtnSelAround.onClick    = function() { self.CallFunc( ".SelAround_Func()"      ); }
-            self.m_BtnDiaplySwatch.onClick      = function() { app.executeMenuCommand("undo"              ); }//
+            self.m_BtnDiaplySwatch.onClick      = function() { app.executeMenuCommand('Adobe Swatches'); }
             self.m_BtnUndo.onClick              = function() { app.executeMenuCommand("undo"              ); }
             self.m_BtnSimplify.onClick          = function() { app.executeMenuCommand("simplify menu item"); }
             self.m_BtnFitIn.onClick             = function() { app.executeMenuCommand('fitin'             ); }
             self.m_BtnCancel.onClick            = function() { self.close(); }
 
+            
 
             
             // アイテムが選択されているか監視する
