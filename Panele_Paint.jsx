@@ -59,6 +59,7 @@ var _MAX_INSTANCES = 1;
  var cAdobeEyedropperTool         = 'Adobe Eyedropper Tool';                // スポイト
  var cAdobeBlobBrushTool          = 'Adobe Blob Brush Tool';                // 塗りブラシ
  var cdAobeEraserTool             = 'Adobe Eraser Tool';                    // 消しゴム
+ var cdAobeDirectLassoTool        = 'Adobe Direct Lasso Tool';              // なげなわ
 
 
 
@@ -115,11 +116,15 @@ function CViewDLg( scriptName ) {
             self.m_objRb01.onClick              = function() { self.CallFunc( ".EyedropperTool_Func()" ); }
             self.m_BtnFillSelectedArea.onClick  = function() { self.CallFunc( ".NoCompoundFunc()"      ); }
             self.m_BtnMakeGroup.onClick         = function() { self.CallFunc( ".MakeGroup_Func()"      ); }
+            self.m_RadioBtnSelAround.onClick    = function() { self.CallFunc( ".SelAround_Func()"      ); }
+            self.m_BtnDiaplySwatch.onClick      = function() { app.executeMenuCommand("undo"              ); }//
             self.m_BtnUndo.onClick              = function() { app.executeMenuCommand("undo"              ); }
             self.m_BtnSimplify.onClick          = function() { app.executeMenuCommand("simplify menu item"); }
             self.m_BtnFitIn.onClick             = function() { app.executeMenuCommand('fitin'             ); }
             self.m_BtnCancel.onClick            = function() { self.close(); }
 
+
+            
             // アイテムが選択されているか監視する
             self.m_GrCheckbox.value = true;
             
@@ -400,6 +405,27 @@ CViewDLg.prototype.MakeGroup_Func = function() {
     } // finally
 }
 
+
+CViewDLg.prototype.SelAround_Func = function()
+{
+    try {
+        var self = this.GetGlobalDialog();
+    
+        self.SetAdobeTool(cdAobeDirectLassoTool);   // なげなわ  
+    } // try
+    catch(e) {
+       alert( e.message );
+    } // catch
+    finally {
+       //app.redraw();                              // 再描画させる
+    } // finally
+}
+
+
+
+
+
+
 CViewDLg.prototype.NoSeledtedAngle = function() {
     var self = this.GetGlobalDialog();
     self.m_RadioBtnAngle01.value = false;
@@ -414,6 +440,7 @@ CViewDLg.prototype.SetAdobeTool = function(TlName) {
         
     self.m_RadioBtnObjectSelect.value = false;
     self.m_objRb01.value = false;
+    self.m_RadioBtnObjectSelect.value = false;
     self.m_RadioBtnBlobBrush.value = false;
     self.m_RadioBtnEraser.value = false;
 
@@ -431,6 +458,10 @@ CViewDLg.prototype.SetAdobeTool = function(TlName) {
 
     if ( m_ToolName == cdAobeEraserTool ) {            // 消しゴム
         self.m_RadioBtnEraser.value = true;
+    }
+
+    if ( m_ToolName == cdAobeDirectLassoTool ) {       // なげなわ
+        self.m_RadioBtnSelAround.value = true;
     }
 }
 
