@@ -82,6 +82,34 @@ function GetScriptDir() {
     return dirPath.replace(/\/*$/, "/");
 }
 
+function runAIA(path, setName, actionName)
+{
+    var f = new File(path);
+
+    if (!f.exists) {
+        alert("AIAファイルが見つかりません");
+        return;
+    }
+
+    try {
+        app.loadAction(f);
+    } catch (e) {
+        // 既にロード済みでもエラーになるので無視OK
+    }
+
+    try {
+        app.doScript(actionName, setName);
+    } catch (e) {
+        alert("アクション実行失敗\n" + e);
+    }
+
+    try {
+        app.unloadAction(setName, "");
+    } catch (e) {}
+}
+
+
+
 // ---------------------------------------------------------------------------------
 
 
@@ -117,14 +145,11 @@ function CViewDLg( scriptName ) {
             self.m_BtnFillSelectedArea.onClick  = function() { self.CallFunc( ".NoCompoundFunc()"      ); }
             self.m_BtnMakeGroup.onClick         = function() { self.CallFunc( ".MakeGroup_Func()"      ); }
             self.m_RadioBtnSelAround.onClick    = function() { self.CallFunc( ".SelAround_Func()"      ); }
-            self.m_BtnDiaplySwatch.onClick      = function() { app.executeMenuCommand('Adobe Swatches'); }
+            self.m_BtnGpExtrudingPtn.onClick    = function() { self.CallFunc( ".GpExtrudingPtn_Func()" ); }
             self.m_BtnUndo.onClick              = function() { app.executeMenuCommand("undo"              ); }
             self.m_BtnSimplify.onClick          = function() { app.executeMenuCommand("simplify menu item"); }
             self.m_BtnFitIn.onClick             = function() { app.executeMenuCommand('fitin'             ); }
             self.m_BtnCancel.onClick            = function() { self.close(); }
-
-            
-
             
             // アイテムが選択されているか監視する
             self.m_GrCheckbox.value = true;
@@ -406,6 +431,31 @@ CViewDLg.prototype.MakeGroup_Func = function() {
     } // finally
 }
 
+CViewDLg.prototype.GpExtrudingPtn_Func = function() {
+    try
+    {
+        self = this.GetGlobalDialog();
+
+        if (app.documents.length > 0) {
+            var thePathObj = app.activeDocument.selection;	// 選択中のオブジェクトを取得
+
+            // １つのグループが選択されているかを確認する
+            if ( thePathObj[0] == undefined ) {   
+                throw new Error("グループを1づだけ選択してね");
+            }
+            
+            $.evalFile(GetScriptDir() + "Actions/GpExtrudingPattern.jsx");
+            runAIA(GetScriptDir() + "Actions/action01.aia", "イラスト", "オブジェクトで抜きの続き");
+        }
+
+    } // try
+    catch(e) {
+        alert( e.message );
+    } // catch
+    finally {
+        app.redraw();                               // 再描画させる
+    } // finally
+}
 
 CViewDLg.prototype.SelAround_Func = function()
 {
