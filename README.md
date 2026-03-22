@@ -2,6 +2,7 @@
 
 動作環境
 Adobe社のイラストレータで動作します。
+ここのページの右側のReleaseをクリックして、
 Panele_Paint_for_Adobe_Illustrator-**.zip　をダウンロードしてください。
 
 動作概要
